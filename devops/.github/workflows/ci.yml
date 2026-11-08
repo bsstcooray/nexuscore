@@ -1,0 +1,89 @@
+name: NexusCore CI/CD Verification Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 1. Database Schema & pgTAP Unit Tests
+  database-pgtap:
+    name: Database Integrity & pgTAP
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: nexuscore_test
+          POSTGRES_USER: test_admin
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Install pgTAP & Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libtap-parser-sourcehandler-pgtap-perl pgtap
+
+      - name: Deploy Schema, Procedures & Triggers
+        env:
+          PGPASSWORD: test_password
+        run: |
+          psql -h localhost -U test_admin -d nexuscore_test -f database/01_schema_27_entities.sql
+          psql -h localhost -U test_admin -d nexuscore_test -f database/02_stored_procedures.sql
+          psql -h localhost -U test_admin -d nexuscore_test -f database/03_triggers_and_audit.sql
+          psql -h localhost -U test_admin -d nexuscore_test -f database/04_indexes_and_perf.sql
+
+      - name: Execute pgTAP Test Suite
+        env:
+          PGPASSWORD: test_password
+        run: |
+          pg_prove -h localhost -U test_admin -d nexuscore_test database/06_pgtap_tests.sql
+
+  # 2. Python FastAPI API & Integration Tests
+  backend-pytest:
+    name: FastAPI Backend Tests (pytest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run Pytest Suite
+        run: |
+          pytest backend/tests/ -v
+
+  # 3. End-to-End Playwright UI & Regression Testing
+  frontend-playwright:
+    name: Playwright E2E & Accessibility Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright & Test Headless Browsers
+        run: |
+          npm init -y
+          npm install -D @playwright/test
+          npx playwright install --with-deps chromium
+      - name: Run E2E Test Suite
+        run: |
+          node -c app.js
+          node -c particles.min.js

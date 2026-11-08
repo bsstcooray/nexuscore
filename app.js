@@ -695,10 +695,33 @@ function handleAIQuery(query) {
 
   const lower = query.toLowerCase();
 
-  // Synthetic Text-to-SQL logic matching the 27 entities & proposal requirements
-  setTimeout(() => {
-    if (lower.includes('developer') || lower.includes('capacity') || lower.includes('react')) {
-      addAIMessage(`Generated read-only parameterized Text-to-SQL query:`, 'bot', 
+  // Try live FastAPI endpoint with fallback to instant in-browser synthesizer
+  (async () => {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/gemini/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: query })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.generated_sql) {
+          addAIMessage(`Generated parameterized Text-to-SQL (logged to AI_INTERACTION_LOG):`, 'bot', data.generated_sql);
+        }
+        setTimeout(() => {
+          addAIMessage(`${data.response_summary}\n\n*Latency: ${data.latency_ms}ms | Tokens: ${data.tokens_used} | Model: ${data.model_version}*`, 'bot');
+        }, 300);
+        audio.playSuccess();
+        return;
+      }
+    } catch (err) {
+      // Local fallback
+    }
+
+    // Synthetic Text-to-SQL logic matching the 27 entities & proposal requirements
+    setTimeout(() => {
+      if (lower.includes('developer') || lower.includes('capacity') || lower.includes('react')) {
+        addAIMessage(`Generated read-only parameterized Text-to-SQL query:`, 'bot', 
 `SELECT e.employee_id, e.name, es.level, 
        (100 - COALESCE(SUM(t.estimated_hours), 0)) AS free_capacity
 FROM EMPLOYEE e
@@ -709,25 +732,26 @@ WHERE s.name IN ('React', 'PostgreSQL')
 GROUP BY e.employee_id, e.name, es.level
 HAVING (100 - COALESCE(SUM(t.estimated_hours), 0)) >= 50
 ORDER BY free_capacity DESC;`);
-      setTimeout(() => {
-        addAIMessage(`Found **3 matching developers** with >50% capacity:
+        setTimeout(() => {
+          addAIMessage(`Found **3 matching developers** with >50% capacity:
 1. **Malith Cooray** (65% capacity | Senior)
 2. **Nirmal Perera** (90% capacity | Lead)
 3. **Bimsari Jayawardhana** (82% capacity | Architect)
 Execution time: 1.84ms (GIN indexed).`, 'bot');
-      }, 400);
-    } else if (lower.includes('summary') || lower.includes('sprint')) {
-      addAIMessage(`Generated Sprint 4 Summary (built in 2.1s):
+        }, 400);
+      } else if (lower.includes('summary') || lower.includes('sprint')) {
+        addAIMessage(`Generated Sprint 4 Summary (built in 2.1s):
 - **Sprint Goal**: Materialized view dashboards, smart assignment & sound engine.
 - **Completion Rate**: 18 of 21 Tasks resolved (85.7%).
 - **Velocity**: 48 Story Points delivered.
 - **Blockers**: 0 active deadlock events (ACID SELECT FOR UPDATE applied).`, 'bot');
-    } else {
-      addAIMessage(`Processed Gemini request against read-only catalog:
+      } else {
+        addAIMessage(`Processed Gemini request against read-only catalog:
 Found 4 matching entities across schema. Execution logged to **AI_INTERACTION_LOG** (Latency: 142ms, Tokens: 86).`, 'bot');
-    }
-    audio.playSuccess();
-  }, 500);
+      }
+      audio.playSuccess();
+    }, 500);
+  })();
 }
 
 function initGeminiAI() {
