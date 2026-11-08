@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusCore — Enterprise Database-Centric Management Platform</title>
+  <meta name="description" content="A Unified, Database-Centric Project, Client and Bug Management System for HelaNexus Software Solutions">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- DYNAMIC BACKGROUND VIEWPORT WITH SWIPE UP-DOWN ANIMATION & SCENERIES -->
+  <div id="bg-viewport">
+    <div class="bg-scenery bg-tech active" id="bgLayerTech" data-mode="mesh">
+      <div class="bg-overlay"></div>
+    </div>
+    <div class="bg-scenery bg-nasa" id="bgLayerNasa" data-mode="nasa">
+      <div class="bg-overlay"></div>
+    </div>
+    <div class="bg-scenery bg-snow" id="bgLayerSnow" data-mode="snow">
+      <div class="bg-overlay"></div>
+    </div>
+    <!-- Synchronized Particle Layer with vertical swipe transitions -->
+    <div id="particles-wrapper">
+      <div id="particles-js"></div>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div class="app-container">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand-logo-wrap">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>NexusCore</h1>
+          <p>HelaNexus Software Solutions</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <div class="nav-section-title">Core Interfaces</div>
+
+        <a class="nav-item active" data-target="view-overview" href="#overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+            <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+          <span>Executive Overview</span>
+          <span class="nav-badge glow-cyan">Live</span>
+        </a>
+
+        <a class="nav-item" data-target="view-projects" href="#projects">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"/>
+            <path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"/><circle cx="8" cy="12" r="2"/>
+          </svg>
+          <span>Projects & Sprints</span>
+          <span class="nav-badge">4 Sprints</span>
+        </a>
+
+        <a class="nav-item" data-target="view-smart-assign" href="#smart-assign">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+          </svg>
+          <span>Smart Assignee</span>
+          <span class="nav-badge glow-emerald">SQL Rec</span>
+        </a>
+
+        <a class="nav-item" data-target="view-github-sync" href="#github-sync">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+            <path d="M9 18c-4.51 2-5-2-7-2"/>
+          </svg>
+          <span>GitHub Staging & Bugs</span>
+          <span class="nav-badge" id="githubPendingCount">2 Staged</span>
+        </a>
+
+        <a class="nav-item" data-target="view-telemetry" href="#telemetry">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>Work Telemetry</span>
+          <span class="nav-badge">PDPA 2022</span>
+        </a>
+
+        <div class="nav-section-title">Database & Security</div>
+
+        <a class="nav-item" data-target="view-security-audit" href="#security-audit">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+          <span>Security & Hash Audit</span>
+          <span class="nav-badge glow-emerald">Verified</span>
+        </a>
+
+        <a class="nav-item" data-target="view-database" href="#database">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
+          </svg>
+          <span>Schema & 27 Entities</span>
+          <span class="nav-badge">3NF/BCNF</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="db-health-widget">
+          <div class="db-health-header">
+            <div class="db-health-text">
+              <span class="pulse-dot"></span>
+              PostgreSQL 16.2
+            </div>
+            <span class="badge badge-emerald" style="font-size: 0.62rem;">WAL ACTIVE</span>
+          </div>
+          <div class="db-metrics-mini">
+            <span>Hit Ratio: 99.4%</span>
+            <span>P99: 1.4ms</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN INTERFACE WRAPPER -->
+    <div class="main-wrapper">
+
+      <!-- TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <div>
+            <div class="view-heading" id="viewTitle">
+              Executive Overview
+            </div>
+            <div class="view-sub" id="viewSubtitle">Real-time database analytics & system performance metrics</div>
+          </div>
+        </div>
+
+        <!-- 3 PARTICLE BACKGROUND SWITCHER BUTTONS (Prompt Requirement) -->
+        <div class="particle-switcher-container">
+          <span class="particle-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/>
+            </svg>
+            Background:
+          </span>
+          <div class="particle-buttons">
+            <button class="particle-btn active" id="btnParticleMesh" data-variant="mesh" onclick="switchThemeAndParticles('mesh')" title="Tech Circuit Backdrop + Network Mesh (tech.jpg)">
+              <span class="particle-icon">⚡</span> Tech / Mesh
+            </button>
+            <button class="particle-btn" id="btnParticleNasa" data-variant="nasa" onclick="switchThemeAndParticles('nasa')" title="NASA Deep Space Nebula + Stars (nasa.png)">
+              <span class="particle-icon">🌌</span> NASA Nebula
+            </button>
+            <button class="particle-btn" id="btnParticleSnow" data-variant="snow" onclick="switchThemeAndParticles('snow')" title="Christmas Snow Wonderland (christmas.jpg)">
+              <span class="particle-icon">🎄</span> Christmas Snow
+            </button>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Sound Engine Toggle (WCAG 2.1 Compliant) -->
+          <button class="sound-toggle-btn" id="soundToggleBtn" title="Toggle Web Audio SFX (WCAG 2.1 accessible)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            </svg>
+          </button>
+
+          <!-- Interactive Onboarding Tour Trigger -->
+          <button class="btn-sm" id="btnStartTour" title="Interactive Driver Guided Tour">
+            🚀 Tour
+          </button>
+
+          <!-- Role Switcher Simulator -->
+          <div class="role-switcher-box">
+            <span class="role-label">Role:</span>
+            <select class="role-select" id="roleSelect">
+              <option value="ceo">CEO / Admin (Full Access)</option>
+              <option value="manager">Project Manager</option>
+              <option value="developer">Developer / QA</option>
+              <option value="client">Client (Restricted View)</option>
+            </select>
+          </div>
+
+          <!-- Google Gemini AI Assistant Trigger -->
+          <button class="btn-gemini-ai" id="btnOpenGeminiAI">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+            </svg>
+            <span>Gemini AI</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- DASHBOARD CONTENT CONTAINER -->
+      <main class="dashboard-content">
+
+        <!-- ==========================================
+             VIEW 1: EXECUTIVE OVERVIEW
+             ========================================== -->
+        <section class="view-panel active" id="view-overview">
+          
+          <!-- Alert Telemetry Banner -->
+          <div class="telemetry-banner" style="margin-bottom: 24px;">
+            <div class="banner-left">
+              <div class="banner-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="banner-title">HelaNexus Database Health: 100% Operational & Audit Verified</div>
+                <div class="banner-desc">Materialized views refreshed at 23:25:00. SHA-256 hash chains across 27 tables validated. Zero orphaned records.</div>
+              </div>
+            </div>
+            <div class="banner-actions">
+              <span class="badge badge-emerald">pg_cron Active</span>
+              <button class="btn-sm" onclick="showToast('Materialized views manually refreshed via REFRESH MATERIALIZED VIEW CONCURRENTLY.', 'success')">🔄 Refresh Views</button>
+            </div>
+          </div>
+
+          <!-- Metrics KPI Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <span class="stat-title">Active Projects</span>
+                <div class="stat-icon cyan">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </div>
+              </div>
+              <div class="stat-value">5 <span style="font-size: 1rem; color: var(--text-dim); font-weight: normal;">/ 5 On Track</span></div>
+              <div class="stat-meta">
+                <span class="trend-badge up">↑ 100% Health</span>
+                <span>CarePlus, FinFlow, LogiTrack</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <span class="stat-title">Sprint Cycle Time</span>
+                <div class="stat-icon purple">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+              </div>
+              <div class="stat-value">1.8 <span style="font-size: 1rem; color: var(--text-dim); font-weight: normal;">Days</span></div>
+              <div class="stat-meta">
+                <span class="trend-badge up">↓ 34% vs Q3</span>
+                <span>Database smart assignment</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-header">
+                <span class="stat-title">GitHub Staging Bugs</span>
+                <div class="stat-icon amber">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 2 1.88 1.88"/><path d="M14.12 3.88 16 2"/><rect width="8" height="14" x="8" y="6" rx="4"/></svg>
+                </div>
+              </div>
+              <div class="stat-value">2 <span style="font-size: 1rem; color: var(--text-dim); font-weight: normal;">Queued</span></div>
+              <div class="stat-meta">
+                <span class="trend-badge up">0 Duplicate</span>
+                <span>Decoupled webhook staging</span>
+              </div>
+            </div>
+
+            <div class="stat-card role-finance">
+              <div class="stat-card-header">
+                <span class="stat-title">Billable Dev Hours</span>
+                <div class="stat-icon emerald">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+              </div>
+              <div class="stat-value">348 <span style="font-size: 1rem; color: var(--text-dim); font-weight: normal;">hrs</span></div>
+              <div class="stat-meta">
+                <span class="trend-badge up">↑ 94.2%</span>
+                <span>RLS restricted billing scope</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2-Column Section: Burndown & Project Health -->
+          <div class="dashboard-row-2" style="margin-top: 24px;">
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  Sprint 4 Delivery Velocity & Burndown
+                  <span class="panel-title-badge">Materialized View</span>
+                </div>
+                <div class="panel-actions">
+                  <span class="badge badge-cyan">48 Story Points</span>
+                </div>
+              </div>
+              
+              <!-- Burndown SVG Chart -->
+              <div class="chart-container">
+                <svg class="chart-svg" viewBox="0 0 600 200">
+                  <defs>
+                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.35"/>
+                      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.0"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Guidelines -->
+                  <line x1="40" y1="30" x2="580" y2="30" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                  <line x1="40" y1="80" x2="580" y2="80" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                  <line x1="40" y1="130" x2="580" y2="130" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                  <line x1="40" y1="180" x2="580" y2="180" stroke="rgba(255,255,255,0.12)"/>
+
+                  <!-- Ideal Burndown Line -->
+                  <line x1="50" y1="40" x2="560" y2="175" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="6"/>
+
+                  <!-- Actual Burndown Area & Line -->
+                  <polygon points="50,40 130,55 210,75 290,95 370,120 450,140 530,172 530,180 50,180" fill="url(#chartGradient)"/>
+                  <polyline points="50,40 130,55 210,75 290,95 370,120 450,140 530,172" fill="none" stroke="#06b6d4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+                  <!-- Interactive Data Points -->
+                  <circle cx="50" cy="40" r="4" fill="#38bdf8"/>
+                  <circle cx="130" cy="55" r="4" fill="#38bdf8"/>
+                  <circle cx="210" cy="75" r="4" fill="#38bdf8"/>
+                  <circle cx="290" cy="95" r="4" fill="#38bdf8"/>
+                  <circle cx="370" cy="120" r="4" fill="#38bdf8"/>
+                  <circle cx="450" cy="140" r="4" fill="#38bdf8"/>
+                  <circle cx="530" cy="172" r="6" fill="#10b981"/>
+                  <text x="520" y="160" fill="#34d399" font-size="11" font-family="JetBrains Mono" font-weight="600">Now (92%)</text>
+                </svg>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim); margin-top: 10px;">
+                <span>Sprint Start (Day 1)</span>
+                <span>Mid-Sprint Review (Day 5)</span>
+                <span>Milestone M4 Release (Day 10)</span>
+              </div>
+            </div>
+
+            <!-- Project Risk Matrix -->
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                  Project Risk & Status
+                </div>
+                <span class="badge badge-emerald">0 High Risk</span>
+              </div>
+              
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #fff;">
+                    <span>CarePlus Telehealth SaaS</span>
+                    <span class="badge badge-emerald">Low Risk</span>
+                  </div>
+                  <div style="font-size: 0.74rem; color: var(--text-dim); margin-top: 4px;">Client: CarePlus Ltd | 12 Tasks Pending</div>
+                  <div class="score-bar-bg" style="width: 100%; height: 6px; margin-top: 8px;">
+                    <div class="score-bar-fill" style="width: 82%;"></div>
+                  </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #fff;">
+                    <span>FinFlow ERP Gateway</span>
+                    <span class="badge badge-cyan">Low Risk</span>
+                  </div>
+                  <div style="font-size: 0.74rem; color: var(--text-dim); margin-top: 4px;">Client: FinFlow SG | 4 Tasks Pending</div>
+                  <div class="score-bar-bg" style="width: 100%; height: 6px; margin-top: 8px;">
+                    <div class="score-bar-fill" style="width: 94%;"></div>
+                  </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #fff;">
+                    <span>LogiTrack Fleet IoT</span>
+                    <span class="badge badge-amber">Moderate Risk</span>
+                  </div>
+                  <div style="font-size: 0.74rem; color: var(--text-dim); margin-top: 4px;">Client: LogiGroup | Staging sync pending</div>
+                  <div class="score-bar-bg" style="width: 100%; height: 6px; margin-top: 8px;">
+                    <div class="score-bar-fill" style="width: 68%; background: #f59e0b;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Activity Log Table -->
+          <div class="panel-card" style="margin-top: 24px;">
+            <div class="panel-header">
+              <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Recent Database Operations & Hash Chain Log
+              </div>
+              <button class="btn-sm" onclick="showToast('Querying partitioned ACTIVITY_EVENT table...', 'info')">Export Audit CSV</button>
+            </div>
+            
+            <div class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Entity</th>
+                    <th>Action</th>
+                    <th>Record ID</th>
+                    <th>Operator</th>
+                    <th>Transaction Time</th>
+                    <th>ACID Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong style="color: #fff;">TASK</strong></td>
+                    <td><span class="badge badge-cyan">UPDATE</span></td>
+                    <td><span class="hash-code">TSK-1049</span></td>
+                    <td>malith.cooray@helanexus.com</td>
+                    <td>2026-11-07 23:28:12</td>
+                    <td><span class="badge badge-emerald">COMMITTED</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong style="color: #fff;">GITHUB_STAGING</strong></td>
+                    <td><span class="badge badge-emerald">INSERT</span></td>
+                    <td><span class="hash-code">GH-8941</span></td>
+                    <td>github_sync_daemon</td>
+                    <td>2026-11-07 23:25:44</td>
+                    <td><span class="badge badge-emerald">COMMITTED</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong style="color: #fff;">WORK_SESSION</strong></td>
+                    <td><span class="badge badge-cyan">UPDATE</span></td>
+                    <td><span class="hash-code">SES-402</span></td>
+                    <td>desktop_agent_v1.4</td>
+                    <td>2026-11-07 23:22:10</td>
+                    <td><span class="badge badge-emerald">COMMITTED</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong style="color: #fff;">AI_INTERACTION_LOG</strong></td>
+                    <td><span class="badge badge-purple">INSERT</span></td>
+                    <td><span class="hash-code">AIL-551</span></td>
+                    <td>gemini_1.5_flash</td>
+                    <td>2026-11-07 23:18:03</td>
+                    <td><span class="badge badge-emerald">COMMITTED</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==========================================
+             VIEW 2: PROJECTS & KANBAN SPRINTS
+             ========================================== -->
+        <section class="view-panel" id="view-projects">
+          <div class="panel-card" style="margin-bottom: 24px;">
+            <div class="panel-header">
+              <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+                Sprint 4 Kanban Board & Concurrency Control
+              </div>
+              <div class="panel-actions">
+                <span class="badge badge-cyan">SELECT FOR UPDATE Active</span>
+                <button class="btn-primary-sm" onclick="openNewTaskModal()">+ New Task</button>
+              </div>
+            </div>
+
+            <!-- Kanban Columns -->
+            <div class="kanban-board">
+              <!-- Backlog -->
+              <div class="kanban-col">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-title">
+                    <span style="color: var(--text-dim);">●</span> Backlog
+                  </div>
+                  <span class="badge">2</span>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1041', 'Contract PDF Parser Integration', 'Backlog', '5', 'Malith Cooray', 'Extract SLA terms via Gemini multimodal parser into CLIENT table.')">
+                  <div class="kanban-card-title">Contract PDF Parser Integration</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Extract SLA terms via Gemini multimodal parser into CLIENT table.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-purple">AI Stretch</span>
+                    <span style="font-family: var(--font-mono);">5 pts</span>
+                  </div>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1042', 'Partition ACTIVITY_EVENT Table', 'Backlog', '3', 'Sivmini Zainab', 'Range partition telemetry table by month for faster purge cycles.')">
+                  <div class="kanban-card-title">Partition ACTIVITY_EVENT Table</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Range partition telemetry table by month for faster purge cycles.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-cyan">Database</span>
+                    <span style="font-family: var(--font-mono);">3 pts</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- To Do -->
+              <div class="kanban-col">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-title">
+                    <span style="color: var(--accent-cyan);">●</span> To Do
+                  </div>
+                  <span class="badge">2</span>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1043', 'GitHub Webhook HMAC Signature Verification', 'To Do', '3', 'Dinura Gamage', 'Validate X-Hub-Signature-256 header before saving to staging queue.')">
+                  <div class="kanban-card-title">GitHub Webhook HMAC Signature Verification</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Validate X-Hub-Signature-256 header before saving to staging queue.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-amber">Security</span>
+                    <div class="user-avatar-tiny" title="Dinura Gamage">DG</div>
+                  </div>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1044', 'Driver.js Onboarding Tour for Clients', 'To Do', '2', 'Nirmal Perera', 'Build 4-step guided walkthrough for external stakeholder logins.')">
+                  <div class="kanban-card-title">Driver.js Onboarding Tour for Clients</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Build 4-step guided walkthrough for external stakeholder logins.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-cyan">Frontend</span>
+                    <div class="user-avatar-tiny" title="Nirmal Perera">NP</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- In Progress -->
+              <div class="kanban-col">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-title">
+                    <span style="color: var(--accent-amber);">●</span> In Progress
+                  </div>
+                  <span class="badge">2</span>
+                </div>
+                <div class="kanban-card" style="border-color: rgba(56, 189, 248, 0.4);" onclick="openTaskDetailModal('TSK-1045', 'Row-Level Security Policies for Billing', 'In Progress', '5', 'Bimsari Jayawardhana', 'Apply RLS so developer role receives empty result for billable rates.')">
+                  <div class="kanban-card-title">Row-Level Security Policies for Billing</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Apply RLS so developer role receives empty result for billable rates.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-emerald">In Dev</span>
+                    <div class="user-avatar-tiny" title="Bimsari Jayawardhana">BJ</div>
+                  </div>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1046', 'Web Audio SFX Engine & WCAG Sync', 'In Progress', '3', 'Malith Cooray', 'Implement oscillator synthesized sound feedback with visual toasts.')">
+                  <div class="kanban-card-title">Web Audio SFX Engine & WCAG Sync</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Implement oscillator synthesized sound feedback with visual toasts.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-emerald">In Dev</span>
+                    <div class="user-avatar-tiny" title="Malith Cooray">MC</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Done / QA -->
+              <div class="kanban-col">
+                <div class="kanban-col-header">
+                  <div class="kanban-col-title">
+                    <span style="color: var(--accent-emerald);">●</span> QA Verified & Done
+                  </div>
+                  <span class="badge badge-emerald">4</span>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1047', 'SHA-256 Hash Chain Trigger', 'Done', '5', 'Bimsari Jayawardhana', 'Tamper-proof audit trigger passing pgTAP test suite.')">
+                  <div class="kanban-card-title">SHA-256 Hash Chain Trigger</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Tamper-proof audit trigger passing pgTAP test suite.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-emerald">pgTAP Pass</span>
+                    <div class="user-avatar-tiny" title="Bimsari J.">BJ</div>
+                  </div>
+                </div>
+                <div class="kanban-card" onclick="openTaskDetailModal('TSK-1048', 'Three Particle.js Background Switchers', 'Done', '3', 'Nirmal Perera', 'Integrated Network Mesh, NASA Space & Snow presets into header toolbar.')">
+                  <div class="kanban-card-title">Three Particle.js Background Switchers</div>
+                  <div style="font-size: 0.74rem; color: var(--text-muted);">Integrated Network Mesh, NASA Space & Snow presets into header toolbar.</div>
+                  <div class="kanban-card-meta">
+                    <span class="badge badge-emerald">Completed</span>
+                    <div class="user-avatar-tiny" title="Nirmal P.">NP</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 3: SMART ASSIGNEE RECOMMENDATION ENGINE
+             ========================================== -->
+        <section class="view-panel" id="view-smart-assign">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                Database-Driven Developer Recommendation Engine (suggest_assignee())
+              </div>
+              <div class="panel-actions">
+                <span class="badge badge-cyan">SQL Scoring Function</span>
+              </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; margin-bottom: 20px;">
+              <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                <div>
+                  <label style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 6px;">Select Required Skill:</label>
+                  <select id="selectAssignTaskSkill" style="background: var(--bg-secondary); border: 1px solid var(--border-medium); color: #fff; padding: 6px 14px; border-radius: var(--radius-md); outline: none;">
+                    <option value="PostgreSQL">PostgreSQL (Stored Procedures & Triggers)</option>
+                    <option value="FastAPI">FastAPI (Async Python REST)</option>
+                    <option value="Tailwind CSS">Tailwind CSS (UI/UX Design)</option>
+                    <option value="RLS">RLS & Argon2 (Database Security)</option>
+                    <option value="GIN Indexing">pg_trgm & GIN Indexing</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style="font-size: 0.74rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 6px;">Urgency / Priority:</label>
+                  <select style="background: var(--bg-secondary); border: 1px solid var(--border-medium); color: #fff; padding: 6px 14px; border-radius: var(--radius-md); outline: none;">
+                    <option>High (48h Deadline)</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                  </select>
+                </div>
+
+                <div style="margin-left: auto; font-size: 0.78rem; color: var(--text-muted);">
+                  Weighted Formula: <code style="color: #38bdf8;">(Skill × 0.45) + (Capacity × 0.35) + (Efficiency × 0.20)</code>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Ranked Candidates Container -->
+            <div id="smartAssigneeResults"></div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 4: GITHUB DECOUPLED STAGING & BUG SYNC
+             ========================================== -->
+        <section class="view-panel" id="view-github-sync">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/></svg>
+                Decoupled GitHub Staging Queue (GITHUB_STAGING Table)
+              </div>
+              <div class="panel-actions">
+                <button class="btn-primary-sm" id="btnTriggerSync">🔄 Trigger Sync Service</button>
+              </div>
+            </div>
+
+            <div style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px; font-size: 0.8rem; color: var(--text-muted);">
+              <strong style="color: #38bdf8;">Architecture Safeguard:</strong> Inbound webhooks never write directly to production tables. Payloads land in <code>GITHUB_STAGING</code>, undergo schema validation & duplicate checking via stored procedure, and are then atomically committed into the <code>BUG</code> table.
+            </div>
+
+            <!-- Dynamic Staging Queue List -->
+            <div id="stagingQueueContainer"></div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 5: WORK SESSION TELEMETRY & PDPA AGENT
+             ========================================== -->
+        <section class="view-panel" id="view-telemetry">
+          <div class="dashboard-row-2">
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  Active Developer Work Session (WORK_SESSION)
+                </div>
+                <span class="badge badge-emerald">Recording</span>
+              </div>
+
+              <div style="text-align: center; padding: 28px 0;">
+                <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em;">Active Elapsed Time</div>
+                <div id="liveSessionTimer" style="font-size: 3rem; font-family: var(--font-mono); font-weight: 700; color: #fff; margin: 10px 0;">01:04:00</div>
+                <div style="display: flex; justify-content: center; gap: 12px; margin-top: 14px;">
+                  <button class="btn-sm" id="btnToggleSession">⏸️ Pause Session</button>
+                  <button class="btn-sm" id="btnSimulateAlert">🚨 Trigger Non-Work Alert</button>
+                </div>
+              </div>
+
+              <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; font-size: 0.78rem; color: var(--text-dim);">
+                <strong style="color: #38bdf8;">Privacy Compliance Notice:</strong> In full compliance with Sri Lanka’s Personal Data Protection Act (PDPA) No. 9 of 2022. NexusCore records active process executable names only. Keystrokes, screen captures, and private browsing are never recorded.
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+                  Telemetry Stream (ACTIVITY_EVENT)
+                </div>
+                <span class="badge badge-cyan" id="activeAlertsCount">0 Alerts</span>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong style="color: #fff; font-size: 0.82rem;">Code.exe (VS Code)</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-dim);">NexusCoreNew/app.js - Editor</div>
+                  </div>
+                  <span class="badge badge-emerald">Productive</span>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong style="color: #fff; font-size: 0.82rem;">pgAdmin4.exe</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-dim);">EXPLAIN (ANALYZE, BUFFERS) Query Plan</div>
+                  </div>
+                  <span class="badge badge-emerald">Productive</span>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong style="color: #fff; font-size: 0.82rem;">chrome.exe</strong>
+                    <div style="font-size: 0.72rem; color: var(--text-dim);">PostgreSQL 16 Documentation - BRIN Index</div>
+                  </div>
+                  <span class="badge badge-cyan">Research</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 6: SECURITY & HASH-CHAINED AUDIT LEDGER
+             ========================================== -->
+        <section class="view-panel" id="view-security-audit">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Cryptographic Hash-Chained Audit Ledger (AUDIT_LOG Table)
+              </div>
+              <div class="panel-actions">
+                <button class="btn-sm" id="btnSimulateTamper" onclick="simulateTamperAttack()">⚠️ Simulate Tamper Attack</button>
+                <button class="btn-sm" id="btnRepairChain" onclick="repairHashChain()" style="display: none;">🔧 Repair Hash Chain</button>
+                <button class="btn-primary-sm" id="btnVerifyHashChain">🛡️ Verify Hash Integrity</button>
+              </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 18px; margin-bottom: 20px; font-size: 0.8rem; color: var(--text-muted);">
+              Every INSERT, UPDATE, and DELETE in NexusCore calculates: <code>current_hash = SHA256(prev_hash || row_id || row_data_jsonb)</code> inside a PostgreSQL trigger. Any unauthorized row modification or deletion breaks the cryptographic chain immediately.
+            </div>
+
+            <!-- Dynamic Audit Ledger Nodes -->
+            <div class="audit-ledger" id="auditLedgerContainer"></div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 7: DATABASE ARCHITECTURE & 27 ENTITIES
+             ========================================== -->
+        <section class="view-panel" id="view-database">
+          <div class="panel-card" style="margin-bottom: 24px;">
+            <div class="panel-header">
+              <div class="panel-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+                NexusCore 27 Entities Schema & Architecture
+              </div>
+              <span class="badge badge-emerald">Normalized (3NF/BCNF)</span>
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div class="filter-pills-row" id="entityFilterPills">
+              <button class="filter-pill active" onclick="filterEntities('all')">All 27 Entities</button>
+              <button class="filter-pill" onclick="filterEntities('core')">Core Business (11)</button>
+              <button class="filter-pill" onclick="filterEntities('github')">GitHub Integration (2)</button>
+              <button class="filter-pill" onclick="filterEntities('telemetry')">Work Monitoring (4)</button>
+              <button class="filter-pill" onclick="filterEntities('analytics')">Intelligence & Analytics (7)</button>
+              <button class="filter-pill" onclick="filterEntities('security')">Security & AI (3)</button>
+            </div>
+
+            <!-- Interactive Entities Grid -->
+            <div class="stats-grid" id="entitiesGridContainer" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+              <!-- Group 1 -->
+              <div class="entity-card-wrap" data-cat="core" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; cursor: pointer;" onclick="openEntityModal('CLIENT')">
+                <div style="font-weight: 700; color: #38bdf8; font-size: 0.85rem; margin-bottom: 8px;">1. Core Business (11 Entities)</div>
+                <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); line-height: 1.8;">
+                  CLIENT, CLIENT_INTERACTION, PROJECT, EMPLOYEE, APP_USER, PROJECT_ASSIGNMENT, TASK, BUG, TIME_LOG, GITHUB_REFERENCE, AUDIT_LOG
+                </div>
+                <div style="font-size: 0.7rem; color: var(--accent-cyan); margin-top: 8px;">🔍 Click to inspect table schema</div>
+              </div>
+
+              <!-- Group 2 -->
+              <div class="entity-card-wrap" data-cat="github" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; cursor: pointer;" onclick="openEntityModal('GITHUB_STAGING')">
+                <div style="font-weight: 700; color: #a78bfa; font-size: 0.85rem; margin-bottom: 8px;">2. GitHub Integration (2 Entities)</div>
+                <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); line-height: 1.8;">
+                  SYNC_RUN, GITHUB_STAGING
+                </div>
+                <div style="font-size: 0.7rem; color: #a78bfa; margin-top: 8px;">🔍 Click to inspect table schema</div>
+              </div>
+
+              <!-- Group 3 -->
+              <div class="entity-card-wrap" data-cat="telemetry" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; cursor: pointer;" onclick="openEntityModal('ACTIVITY_EVENT')">
+                <div style="font-weight: 700; color: #34d399; font-size: 0.85rem; margin-bottom: 8px;">3. Work Monitoring (4 Entities)</div>
+                <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); line-height: 1.8;">
+                  WORK_SESSION, ACTIVITY_EVENT (Monthly Partitioned), APP_RULE, ALERT
+                </div>
+                <div style="font-size: 0.7rem; color: #34d399; margin-top: 8px;">🔍 Click to inspect table schema</div>
+              </div>
+
+              <!-- Group 4 -->
+              <div class="entity-card-wrap" data-cat="analytics" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; cursor: pointer;" onclick="openEntityModal('ASSIGNMENT_SUGGESTION')">
+                <div style="font-weight: 700; color: #fbbf24; font-size: 0.85rem; margin-bottom: 8px;">4. Intelligence & Analytics (7 Entities)</div>
+                <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); line-height: 1.8;">
+                  SKILL, EMPLOYEE_SKILL, TASK_SKILL, TASK_DEPENDENCY, TASK_STATUS_HISTORY, PROJECT_METRIC_SNAPSHOT, ASSIGNMENT_SUGGESTION
+                </div>
+                <div style="font-size: 0.7rem; color: #fbbf24; margin-top: 8px;">🔍 Click to inspect table schema</div>
+              </div>
+
+              <!-- Group 5 & 6 -->
+              <div class="entity-card-wrap" data-cat="security" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; cursor: pointer;" onclick="openEntityModal('USER_SESSION')">
+                <div style="font-weight: 700; color: #f472b6; font-size: 0.85rem; margin-bottom: 8px;">5. Security & AI (3 Entities)</div>
+                <div style="font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); line-height: 1.8;">
+                  USER_SESSION, LOGIN_ATTEMPT, AI_INTERACTION_LOG
+                </div>
+                <div style="font-size: 0.7rem; color: #f472b6; margin-top: 8px;">🔍 Click to inspect table schema</div>
+              </div>
+            </div>
+
+            <!-- Trigram Fuzzy Search Demo -->
+            <div style="margin-top: 24px; background: rgba(10,15,26,0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">🔎 PostgreSQL pg_trgm Fuzzy Search Simulator (CLIENT Table)</div>
+                <span class="badge badge-cyan">GIN Trigram Index</span>
+              </div>
+              <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                <input type="text" id="trigramSearchInput" class="form-input" placeholder="Type client name with typo (e.g. 'helanex', 'finflo', 'careplz')..." style="flex: 1;" oninput="runTrigramSearch(this.value)">
+                <button class="btn-primary-sm" onclick="runTrigramSearch(document.getElementById('trigramSearchInput').value)">Search GIN</button>
+              </div>
+              <div id="trigramResultsContainer">
+                <div style="font-size: 0.78rem; color: var(--text-dim);">Type a query above to test database trigram similarity matching (> 0.3 threshold).</div>
+              </div>
+            </div>
+
+            <!-- Stored Procedures & Triggers -->
+            <div style="margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div style="background: rgba(10,15,26,0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+                <div style="font-weight: 700; color: #fff; font-size: 0.88rem; margin-bottom: 10px;">⚡ 6 Key Stored Procedures</div>
+                <ul style="font-size: 0.78rem; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
+                  <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span><code>suggest_assignee()</code></span>
+                    <button class="btn-sm" style="font-size: 0.65rem;" onclick="openProcRunner('suggest_assignee')">Run Proc</button>
+                  </li>
+                  <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span><code>process_github_staging()</code></span>
+                    <button class="btn-sm" style="font-size: 0.65rem;" onclick="openProcRunner('process_github_staging')">Run Proc</button>
+                  </li>
+                  <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span><code>generate_weekly_progress()</code></span>
+                    <button class="btn-sm" style="font-size: 0.65rem;" onclick="openProcRunner('generate_weekly_progress')">Run Proc</button>
+                  </li>
+                  <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span><code>merge_duplicate_clients()</code></span>
+                    <button class="btn-sm" style="font-size: 0.65rem;" onclick="openProcRunner('merge_duplicate_clients')">Run Proc</button>
+                  </li>
+                  <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span><code>allocate_task_with_lock()</code></span>
+                    <button class="btn-sm" style="font-size: 0.65rem;" onclick="openProcRunner('allocate_task_with_lock')">Run Proc</button>
+                  </li>
+                  <li style="display: flex; justify-content: space-between; align-items: center;">
+                    <span><code>refresh_materialized_views()</code></span>
+                    <button class="btn-sm" style="font-size: 0.65rem;" onclick="openProcRunner('refresh_materialized_views')">Run Proc</button>
+                  </li>
+                </ul>
+              </div>
+
+              <div style="background: rgba(10,15,26,0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+                <div style="font-weight: 700; color: #fff; font-size: 0.88rem; margin-bottom: 10px;">🛡️ 6 Key Triggers</div>
+                <ul style="font-size: 0.78rem; color: var(--text-muted); padding-left: 20px; line-height: 1.8;">
+                  <li><code>trg_hash_chain_audit</code> - SHA-256 BEFORE INSERT</li>
+                  <li><code>trg_task_status_history</code> - AFTER UPDATE OF status</li>
+                  <li><code>trg_non_work_app_alert</code> - AFTER INSERT on activity</li>
+                  <li><code>trg_prevent_duplicate_client</code> - Trigram similarity check</li>
+                  <li><code>trg_workload_capacity_guard</code> - Rejects over-allocation</li>
+                  <li><code>trg_sanitize_github_payload</code> - Inbound validation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- GOOGLE GEMINI AI DRAWER -->
+  <aside class="ai-drawer" id="aiDrawer">
+    <div class="ai-header">
+      <div class="ai-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+        </svg>
+        Gemini 1.5 Assistant
+      </div>
+      <button class="ai-close-btn" id="btnCloseAI">✕</button>
+    </div>
+
+    <div class="ai-messages" id="aiMessagesBox">
+      <div class="ai-bubble bot">
+        👋 Hello! I am the <strong>NexusCore Gemini AI Agent</strong>. I can execute read-only Text-to-SQL queries, generate sprint summaries in under 5 seconds, and triage GitHub bugs. All interactions are audited.
+      </div>
+    </div>
+
+    <div class="ai-input-area">
+      <div class="quick-prompts">
+        <span class="chip-prompt">Show available React developers</span>
+        <span class="chip-prompt">Generate Sprint 4 summary</span>
+        <span class="chip-prompt">Check unbilled hours</span>
+      </div>
+      <div class="ai-input-wrapper">
+        <input type="text" class="ai-input-field" id="aiInputField" placeholder="Ask in natural language (Text-to-SQL)...">
+        <button class="ai-send-btn" id="btnAISend">➤</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TASK DETAILS & ACID LOCK MODAL -->
+  <div class="modal-backdrop" id="modalTaskDetail">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          <span id="modalTaskHeading">Task Details & Concurrency Lock</span>
+        </div>
+        <button class="ai-close-btn" onclick="closeModal('modalTaskDetail')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: rgba(6,182,212,0.12); border: 1px solid rgba(56,189,248,0.3); border-radius: var(--radius-md); padding: 10px 14px; font-size: 0.78rem; color: #38bdf8; display: flex; align-items: center; justify-content: space-between;">
+          <span>🔒 <strong>ACID Row Lock:</strong> SELECT FOR UPDATE applied</span>
+          <span class="badge badge-emerald">Isolated Session</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Task ID & Title</label>
+          <input type="text" class="form-input" id="inputTaskTitle" value="Contract PDF Parser Integration">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label">Status (TASK_STATUS_HISTORY)</label>
+            <select class="form-select" id="selectTaskStatus">
+              <option value="Backlog">Backlog</option>
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done & QA Verified</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Story Points</label>
+            <input type="number" class="form-input" id="inputTaskPoints" value="5" min="1" max="13">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assigned Developer (EMPLOYEE_ID)</label>
+          <select class="form-select" id="selectTaskAssignee">
+            <option value="Malith Cooray">Malith Cooray (Senior Full Stack / AI Lead)</option>
+            <option value="Bimsari Jayawardhana">Bimsari Jayawardhana (DB Architect & Security)</option>
+            <option value="Dinura Gamage">Dinura Gamage (Backend & GitHub Sync)</option>
+            <option value="Nirmal Perera">Nirmal Perera (Frontend & UI/UX Specialist)</option>
+            <option value="Sivmini Zainab">Sivmini Zainab (Data Engineer & Indexing)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Task Description & Acceptance Criteria</label>
+          <textarea class="form-textarea" id="inputTaskDesc">Extract SLA terms via Gemini multimodal parser into CLIENT table.</textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-sm" onclick="closeModal('modalTaskDetail')">Cancel</button>
+        <button class="btn-primary-sm" onclick="saveTaskModalChanges()">🔒 Commit Transaction (COMMIT)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STORED PROCEDURE EXECUTION RUNNER MODAL -->
+  <div class="modal-backdrop" id="modalProcRunner">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <span id="modalProcTitle">Execute Stored Procedure</span>
+        </div>
+        <button class="ai-close-btn" onclick="closeModal('modalProcRunner')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size: 0.8rem; color: var(--text-muted);" id="modalProcDesc">
+          Executing stored procedure inside PostgreSQL transactional engine.
+        </div>
+        <div class="sql-console" id="modalProcConsole">
+          -- Initializing procedure call...
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-sm" onclick="closeModal('modalProcRunner')">Close</button>
+        <button class="btn-primary-sm" id="btnExecuteAgain" onclick="reRunActiveProcedure()">⚡ Execute Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENTITY SCHEMA INSPECTOR MODAL -->
+  <div class="modal-backdrop" id="modalEntityDetail">
+    <div class="modal-box" style="max-width: 700px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+          <span id="modalEntityName">Table Schema Inspector</span>
+        </div>
+        <button class="ai-close-btn" onclick="closeModal('modalEntityDetail')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+          <span class="badge badge-cyan" id="modalEntityGroup">Core Business</span>
+          <span class="badge badge-emerald" id="modalEntityRows">10,000+ Synthetic Rows</span>
+          <span class="badge badge-purple" id="modalEntityConstraint">3NF / BCNF Verified</span>
+        </div>
+        <div class="table-responsive">
+          <table class="custom-table" style="font-size: 0.78rem;">
+            <thead>
+              <tr>
+                <th>Column Name</th>
+                <th>Data Type</th>
+                <th>Constraint</th>
+                <th>Index Type</th>
+              </tr>
+            </thead>
+            <tbody id="modalEntityColumnsBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-primary-sm" onclick="closeModal('modalEntityDetail')">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WCAG 2.1 TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="particles.min.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
