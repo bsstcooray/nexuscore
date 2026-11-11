@@ -96,6 +96,7 @@ class GeminiQueryRequest(BaseModel):
     prompt: str
     project_id: Optional[int] = None
     context: Optional[str] = "general"
+    api_key: Optional[str] = None
 
 class GeminiQueryResponse(BaseModel):
     prompt: str

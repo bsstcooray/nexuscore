@@ -157,5 +157,14 @@ def health_check():
 def serve_index():
     return FileResponse("index.html")
 
-# Mount static files (css, js, assets, background images)
+# Mount static files (css, js, assets, background images, mascots)
+import os
+if os.path.exists("mascots"):
+    app.mount("/mascots", StaticFiles(directory="mascots"), name="mascots")
+elif os.path.exists("public/mascots"):
+    app.mount("/mascots", StaticFiles(directory="public/mascots"), name="mascots")
+
 app.mount("/static", StaticFiles(directory="."), name="static")
+
+# Mount root directory so index.html, styles.css, mascot.js, app.js are served directly
+app.mount("/", StaticFiles(directory=".", html=True), name="root_static")

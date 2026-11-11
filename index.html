@@ -187,14 +187,6 @@
               <option value="client">Client (Restricted View)</option>
             </select>
           </div>
-
-          <!-- Google Gemini AI Assistant Trigger -->
-          <button class="btn-gemini-ai" id="btnOpenGeminiAI">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-            </svg>
-            <span>Gemini AI</span>
-          </button>
         </div>
       </header>
 
@@ -875,37 +867,6 @@
 
   </div>
 
-  <!-- GOOGLE GEMINI AI DRAWER -->
-  <aside class="ai-drawer" id="aiDrawer">
-    <div class="ai-header">
-      <div class="ai-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-        </svg>
-        Gemini 1.5 Assistant
-      </div>
-      <button class="ai-close-btn" id="btnCloseAI">✕</button>
-    </div>
-
-    <div class="ai-messages" id="aiMessagesBox">
-      <div class="ai-bubble bot">
-        👋 Hello! I am the <strong>NexusCore Gemini AI Agent</strong>. I can execute read-only Text-to-SQL queries, generate sprint summaries in under 5 seconds, and triage GitHub bugs. All interactions are audited.
-      </div>
-    </div>
-
-    <div class="ai-input-area">
-      <div class="quick-prompts">
-        <span class="chip-prompt">Show available React developers</span>
-        <span class="chip-prompt">Generate Sprint 4 summary</span>
-        <span class="chip-prompt">Check unbilled hours</span>
-      </div>
-      <div class="ai-input-wrapper">
-        <input type="text" class="ai-input-field" id="aiInputField" placeholder="Ask in natural language (Text-to-SQL)...">
-        <button class="ai-send-btn" id="btnAISend">➤</button>
-      </div>
-    </div>
-  </aside>
-
   <!-- TASK DETAILS & ACID LOCK MODAL -->
   <div class="modal-backdrop" id="modalTaskDetail">
     <div class="modal-box">
@@ -1028,8 +989,85 @@
   <!-- WCAG 2.1 TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
 
+  <!-- MASCOT AI BOT CHAT RECTANGLE (ABOVE MASCOT) -->
+  <div id="mascotChatPanel" class="mascot-chat-panel" aria-label="NexusCore AI Assistant Dialog">
+    <div class="mascot-chat-header">
+      <div class="mascot-chat-title">
+        <span class="mascot-avatar-mini">🐨</span>
+        <div>
+          <div class="mascot-chat-name">NexusCore AI Bot <span class="badge-mini">gemini-3.8-flash</span></div>
+          <div class="mascot-chat-status"><span class="dot-online"></span> SQL Context Loaded</div>
+        </div>
+      </div>
+      <div class="mascot-chat-actions">
+        <button type="button" class="mascot-action-btn" id="btnToggleApiKey" title="Configure Gemini API Key">🔑</button>
+        <button type="button" class="mascot-action-btn" id="btnClearMascotChat" title="Clear Chat History">🗑️</button>
+        <button type="button" class="mascot-close-btn" id="btnCloseMascotChat" title="Minimize / Close">✕</button>
+      </div>
+    </div>
+
+    <!-- API Key Quick Bar (collapsible) -->
+    <div id="mascotApiKeyBar" class="mascot-api-key-bar" style="display: none;">
+      <input type="password" id="inputCustomApiKey" placeholder="Enter GEMINI_API_KEY (optional)..." />
+      <button type="button" id="btnSaveApiKey" class="btn-primary-xs">Save</button>
+    </div>
+
+    <!-- DISPLAY RECTANGLE: Chat output and conversation stream -->
+    <div class="mascot-chat-output" id="mascotChatOutput">
+      <div class="mascot-msg assistant-msg">
+        <div class="mascot-msg-header">
+          <span class="msg-author">NexusCore AI</span>
+          <span class="msg-time">Just now</span>
+        </div>
+        <div class="mascot-msg-body">
+          <p><strong>G'day! I'm NexusCore AI</strong>, your workplace database assistant 🐨.</p>
+          <p>I have automatically integrated the context from the <strong>updated database SQL file</strong> (27 normalized entities, ACID stored procedures, SHA-256 tamper-evident triggers, and baseline records).</p>
+          <p>How can I help you manage projects, analyze workloads, or track bugs today?</p>
+        </div>
+      </div>
+
+      <!-- Quick Suggestion Chips -->
+      <div class="mascot-quick-chips" id="mascotQuickChips">
+        <button class="mascot-chip" data-prompt="Show me all active projects and their client SLAs.">📋 Active Projects</button>
+        <button class="mascot-chip" data-prompt="Who has the highest employee workload right now?">👥 Dev Workloads</button>
+        <button class="mascot-chip" data-prompt="Show unresolved critical bugs and GitHub staging issues.">🐛 Critical Bugs</button>
+        <button class="mascot-chip" data-prompt="Summarize Sprint 4 delivery velocity and burndown.">📊 Sprint 4 Velocity</button>
+        <button class="mascot-chip" data-prompt="Verify database SHA-256 audit log integrity.">🔐 Audit Hash Chain</button>
+      </div>
+    </div>
+
+    <!-- INPUT RECTANGLE: Prompt entry and send action -->
+    <div class="mascot-chat-input-area">
+      <div class="mascot-input-wrapper">
+        <textarea id="mascotPromptInput" placeholder="Ask NexusCore AI (e.g., 'Who is working on Project Alpha?')..." rows="1"></textarea>
+        <button type="button" id="btnSendMascotPrompt" class="mascot-send-button" aria-label="Send prompt">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <div class="mascot-input-footer">
+        <span>Powered by <code>gemini-3.8-flash</code> • <code>updated_database.sql</code></span>
+        <span id="mascotCharCount">Press Enter to send</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE MASCOT COMPONENT (BOTTOM RIGHT) -->
+  <!--
+    import { Mascot } from 'page-mascot'
+
+    <Mascot
+      directions="/mascots/koala-directions.webp"
+      reactions="/mascots/koala-reactions.webp"
+    />
+  -->
+  <div id="mascot-root" class="page-mascot-wrapper" data-directions="/mascots/koala-directions.webp" data-reactions="/mascots/koala-reactions.webp" aria-label="Koala Mascot"></div>
+
   <!-- SCRIPTS -->
   <script src="particles.min.js"></script>
+  <script src="mascot.js"></script>
   <script src="app.js"></script>
 
 </body>

@@ -574,15 +574,13 @@ window.promoteStagingRecord = function(index) {
 
 window.aiTriageBug = function(bugId, title) {
   audio.playClick();
-  toggleAIDrawer(true);
-  addAIMessage(`Triage and classify staging bug [${bugId}]: "${title}"`, 'user');
-  setTimeout(() => {
-    addAIMessage(`**Gemini AI Bug Triage Analysis**:
-- **Entity**: BUG & GITHUB_STAGING
-- **Predicted Root Cause**: Unhandled exception during payment gateway callback verification.
-- **Recommended Action**: Wrap webhook payload deserializer in validation schema and attach idempotency key.
-- **Recommended Assignee**: Malith Cooray (96% capability match in payment integrations).`, 'bot');
-  }, 600);
+  if (window.PageMascotInstance) {
+    const panel = document.getElementById('mascotChatPanel');
+    if (panel && !panel.classList.contains('active')) {
+      window.PageMascotInstance.toggleChatPanel();
+    }
+    window.PageMascotInstance.sendMascotPrompt(`Triage and classify staging bug [${bugId}]: "${title}"`);
+  }
 };
 
 function initGitHubSync() {
@@ -654,138 +652,6 @@ function initAuditLedger() {
   }
 }
 
-// --- GEMINI AI ASSISTANT DRAWER & TEXT-TO-SQL ---
-function toggleAIDrawer(open) {
-  const drawer = document.getElementById('aiDrawer');
-  if (drawer) {
-    if (open) {
-      drawer.classList.add('open');
-      audio.playSwitch();
-    } else {
-      drawer.classList.remove('open');
-      audio.playClick();
-    }
-  }
-}
-
-function addAIMessage(content, sender = 'bot', code = null) {
-  const messagesBox = document.getElementById('aiMessagesBox');
-  if (!messagesBox) return;
-
-  const bubble = document.createElement('div');
-  bubble.className = `ai-bubble ${sender}`;
-  
-  let formattedContent = content.replace(/\n/g, '<br>');
-  bubble.innerHTML = formattedContent;
-
-  if (code) {
-    const codeEl = document.createElement('div');
-    codeEl.className = 'ai-code-block';
-    codeEl.innerText = code;
-    bubble.appendChild(codeEl);
-  }
-
-  messagesBox.appendChild(bubble);
-  messagesBox.scrollTop = messagesBox.scrollHeight;
-}
-
-function handleAIQuery(query) {
-  if (!query.trim()) return;
-  addAIMessage(query, 'user');
-
-  const lower = query.toLowerCase();
-
-  // Try live FastAPI endpoint with fallback to instant in-browser synthesizer
-  (async () => {
-    try {
-      const res = await fetch('http://127.0.0.1:8000/api/gemini/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: query })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.generated_sql) {
-          addAIMessage(`Generated parameterized Text-to-SQL (logged to AI_INTERACTION_LOG):`, 'bot', data.generated_sql);
-        }
-        setTimeout(() => {
-          addAIMessage(`${data.response_summary}\n\n*Latency: ${data.latency_ms}ms | Tokens: ${data.tokens_used} | Model: ${data.model_version}*`, 'bot');
-        }, 300);
-        audio.playSuccess();
-        return;
-      }
-    } catch (err) {
-      // Local fallback
-    }
-
-    // Synthetic Text-to-SQL logic matching the 27 entities & proposal requirements
-    setTimeout(() => {
-      if (lower.includes('developer') || lower.includes('capacity') || lower.includes('react')) {
-        addAIMessage(`Generated read-only parameterized Text-to-SQL query:`, 'bot', 
-`SELECT e.employee_id, e.name, es.level, 
-       (100 - COALESCE(SUM(t.estimated_hours), 0)) AS free_capacity
-FROM EMPLOYEE e
-JOIN EMPLOYEE_SKILL es ON e.employee_id = es.employee_id
-JOIN SKILL s ON es.skill_id = s.skill_id
-LEFT JOIN TASK t ON e.employee_id = t.assigned_to AND t.status != 'DONE'
-WHERE s.name IN ('React', 'PostgreSQL')
-GROUP BY e.employee_id, e.name, es.level
-HAVING (100 - COALESCE(SUM(t.estimated_hours), 0)) >= 50
-ORDER BY free_capacity DESC;`);
-        setTimeout(() => {
-          addAIMessage(`Found **3 matching developers** with >50% capacity:
-1. **Malith Cooray** (65% capacity | Senior)
-2. **Nirmal Perera** (90% capacity | Lead)
-3. **Bimsari Jayawardhana** (82% capacity | Architect)
-Execution time: 1.84ms (GIN indexed).`, 'bot');
-        }, 400);
-      } else if (lower.includes('summary') || lower.includes('sprint')) {
-        addAIMessage(`Generated Sprint 4 Summary (built in 2.1s):
-- **Sprint Goal**: Materialized view dashboards, smart assignment & sound engine.
-- **Completion Rate**: 18 of 21 Tasks resolved (85.7%).
-- **Velocity**: 48 Story Points delivered.
-- **Blockers**: 0 active deadlock events (ACID SELECT FOR UPDATE applied).`, 'bot');
-      } else {
-        addAIMessage(`Processed Gemini request against read-only catalog:
-Found 4 matching entities across schema. Execution logged to **AI_INTERACTION_LOG** (Latency: 142ms, Tokens: 86).`, 'bot');
-      }
-      audio.playSuccess();
-    }, 500);
-  })();
-}
-
-function initGeminiAI() {
-  const triggerBtn = document.getElementById('btnOpenGeminiAI');
-  const closeBtn = document.getElementById('btnCloseAI');
-  const sendBtn = document.getElementById('btnAISend');
-  const inputField = document.getElementById('aiInputField');
-
-  if (triggerBtn) triggerBtn.addEventListener('click', () => toggleAIDrawer(true));
-  if (closeBtn) closeBtn.addEventListener('click', () => toggleAIDrawer(false));
-
-  if (sendBtn && inputField) {
-    const submit = () => {
-      const val = inputField.value;
-      if (val) {
-        handleAIQuery(val);
-        inputField.value = '';
-      }
-    };
-    sendBtn.addEventListener('click', submit);
-    inputField.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') submit();
-    });
-  }
-
-  // Quick Chips
-  document.querySelectorAll('.chip-prompt').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const prompt = chip.innerText;
-      handleAIQuery(prompt);
-    });
-  });
-}
-
 // --- GUIDED ONBOARDING TOUR ---
 function initGuidedTour() {
   const btnStartTour = document.getElementById('btnStartTour');
@@ -799,7 +665,7 @@ function initGuidedTour() {
       { element: '.particle-switcher-container', title: 'Particle Engine Switcher', text: 'Toggle between Network Mesh, NASA Stars, and Data Snow backgrounds.' },
       { element: '.role-switcher-box', title: 'Role Simulator', text: 'Switch between CEO, PM, Developer, and Client to inspect RLS permissions.' },
       { element: '.stat-card', title: 'Materialized Metrics', text: 'Live KPI cards powered by pre-computed materialized views.' },
-      { element: '.btn-gemini-ai', title: 'Gemini AI Assistant', text: 'Natural language Text-to-SQL, sprint reports, and bug triage in under 5s.' }
+      { element: '#mascot-root', title: 'NexusCore Mascot AI Bot', text: 'Natural language Text-to-SQL, sprint reports, and bug triage powered by Gemini 3.8 Flash!' }
     ];
 
     let currentStep = 0;
@@ -1213,10 +1079,7 @@ function bootNexusCore() {
   // 8. Cryptographic Audit Ledger
   initAuditLedger();
 
-  // 9. Gemini AI
-  initGeminiAI();
-
-  // 10. Guided Onboarding Tour
+  // 9. Guided Onboarding Tour
   initGuidedTour();
 }
 
