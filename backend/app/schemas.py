@@ -20,6 +20,8 @@ class TokenResponse(BaseModel):
     username: str
     role: str
     mfa_required: bool = False
+    full_name: Optional[str] = None
+    designation: Optional[str] = None
 
 class MFASetupResponse(BaseModel):
     secret: str

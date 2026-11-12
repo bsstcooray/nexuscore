@@ -29,8 +29,144 @@
     </div>
   </div>
 
+  <!-- ========================================================
+       LOGIN VIEW (AUTHENTICATION & ROLE REDIRECTION)
+       Particle animations active & interactive in blank backdrop
+       ======================================================== -->
+  <div id="login-view" class="login-view-wrapper">
+    <!-- Top Bar with Particle Scenery Switchers on Login View -->
+    <header class="login-header-bar">
+      <div class="login-brand">
+        <div class="brand-logo-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="login-brand-text">
+          <div class="login-brand-title">NexusCore</div>
+          <div class="login-brand-sub">Enterprise Management Platform</div>
+        </div>
+      </div>
+
+      <!-- 3 Particle Background Switchers (Switchable on Login Page) -->
+      <div class="particle-switcher-container">
+        <span class="particle-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/>
+          </svg>
+          Background:
+        </span>
+        <div class="particle-buttons">
+          <button type="button" class="particle-btn active" data-variant="mesh" onclick="switchThemeAndParticles('mesh')" title="Tech Circuit Backdrop + Network Mesh (tech.jpg)">
+            <span class="particle-icon">⚡</span> Tech / Mesh
+          </button>
+          <button type="button" class="particle-btn" data-variant="nasa" onclick="switchThemeAndParticles('nasa')" title="NASA Deep Space Nebula (nasa.png)">
+            <span class="particle-icon">🌌</span> NASA Nebula
+          </button>
+          <button type="button" class="particle-btn" data-variant="snow" onclick="switchThemeAndParticles('snow')" title="Christmas Snow Wonderland (christmas.jpg)">
+            <span class="particle-icon">🎄</span> Christmas Snow
+          </button>
+        </div>
+      </div>
+
+      <div class="login-header-status">
+        <span class="pulse-dot"></span>
+        <span class="status-text">PostgreSQL 16.2 • ACID Auth</span>
+      </div>
+    </header>
+
+    <!-- Centered Glassmorphic Login Box -->
+    <main class="login-main-container">
+      <div class="login-card">
+        <div class="login-card-header">
+          <div class="login-badge-row">
+            <span class="badge badge-cyan">ACID SECURED ACCESS</span>
+            <span class="badge badge-emerald">PostgreSQL 16.2</span>
+          </div>
+          <h2>Welcome Back</h2>
+          <p>Sign in with your credentials to enter your role-specific dashboard</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="login-form" autocomplete="off" onsubmit="handleLoginSubmit(event)">
+          <div class="login-input-group">
+            <label for="loginUsername">Username / ID</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input type="text" id="loginUsername" placeholder="e.g. kavindu, dilshan, bimsari, client" required autocomplete="username" />
+            </div>
+          </div>
+
+          <div class="login-input-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-icon-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <input type="password" id="loginPassword" placeholder="Enter password (Password123!)" required autocomplete="current-password" />
+              <button type="button" id="btnTogglePassword" class="btn-toggle-eye" onclick="togglePasswordVisibility()" title="Toggle visibility">👁️</button>
+            </div>
+          </div>
+
+          <!-- Alert for Login Error -->
+          <div id="loginErrorMessage" class="login-error-alert" style="display: none;"></div>
+
+          <button type="submit" id="btnLoginSubmit" class="btn-login-submit">
+            <span id="loginBtnText">Sign In to Dashboard</span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Quick 1-Click Role Logins for Fast Role Testing -->
+        <div class="quick-roles-section">
+          <div class="quick-roles-divider">
+            <span>Instant Role Demo Logins</span>
+          </div>
+          <div class="quick-roles-grid">
+            <button type="button" class="quick-role-btn role-ceo" onclick="quickFillAndLogin('kavindu', 'Password123!')" title="Log in as CEO / Administrator">
+              <div class="role-icon">👔</div>
+              <div class="role-meta">
+                <strong>CEO / Admin</strong>
+                <small>Kavindu K. (Full Executive)</small>
+              </div>
+            </button>
+            <button type="button" class="quick-role-btn role-pm" onclick="quickFillAndLogin('dilshan', 'Password123!')" title="Log in as Lead Project Manager">
+              <div class="role-icon">📊</div>
+              <div class="role-meta">
+                <strong>Project Manager</strong>
+                <small>Dilshan G. (Sprints & Team)</small>
+              </div>
+            </button>
+            <button type="button" class="quick-role-btn role-dev" onclick="quickFillAndLogin('bimsari', 'Password123!')" title="Log in as Senior Developer / QA">
+              <div class="role-icon">💻</div>
+              <div class="role-meta">
+                <strong>Developer / QA</strong>
+                <small>Bimsari P. (Tasks & Bugs)</small>
+              </div>
+            </button>
+            <button type="button" class="quick-role-btn role-client" onclick="quickFillAndLogin('client', 'Password123!')" title="Log in as External Client Partner">
+              <div class="role-icon">🤝</div>
+              <div class="role-meta">
+                <strong>Client Partner</strong>
+                <small>CarePlus (Milestones & SLA)</small>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="login-card-footer">
+          <span>✨ Move cursor across blank areas to interact with live particles</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
   <!-- MAIN APP CONTAINER -->
-  <div class="app-container">
+  <div class="app-container" id="appMainContainer" style="display: none;">
 
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
@@ -64,7 +200,7 @@
             <path d="M18 8h4a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-4"/><circle cx="8" cy="12" r="2"/>
           </svg>
           <span>Projects & Sprints</span>
-          <span class="nav-badge">4 Sprints</span>
+          <span class="nav-badge">4 Active</span>
         </a>
 
         <a class="nav-item" data-target="view-smart-assign" href="#smart-assign">
@@ -72,7 +208,7 @@
             <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
           </svg>
           <span>Smart Assignee</span>
-          <span class="nav-badge glow-emerald">SQL Rec</span>
+          <span class="nav-badge glow-emerald">Auto-Match</span>
         </a>
 
         <a class="nav-item" data-target="view-github-sync" href="#github-sync">
@@ -100,7 +236,7 @@
             <path d="m9 12 2 2 4-4"/>
           </svg>
           <span>Security & Hash Audit</span>
-          <span class="nav-badge glow-emerald">Verified</span>
+          <span class="nav-badge glow-emerald">Audited</span>
         </a>
 
         <a class="nav-item" data-target="view-database" href="#database">
@@ -108,7 +244,7 @@
             <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
           </svg>
           <span>Schema & 27 Entities</span>
-          <span class="nav-badge">3NF/BCNF</span>
+          <span class="nav-badge">27 Tables</span>
         </a>
       </nav>
 
@@ -173,19 +309,25 @@
           </button>
 
           <!-- Interactive Onboarding Tour Trigger -->
-          <button class="btn-sm" id="btnStartTour" title="Interactive Driver Guided Tour">
+          <button class="btn-sm" id="btnStartTour" onclick="openTourModal()" title="System Walkthrough & Architecture Tour">
             🚀 Tour
           </button>
 
-          <!-- Role Switcher Simulator -->
-          <div class="role-switcher-box">
-            <span class="role-label">Role:</span>
-            <select class="role-select" id="roleSelect">
-              <option value="ceo">CEO / Admin (Full Access)</option>
-              <option value="manager">Project Manager</option>
-              <option value="developer">Developer / QA</option>
-              <option value="client">Client (Restricted View)</option>
-            </select>
+          <!-- Authenticated User Profile & Logout (Replaces old static role dropdown) -->
+          <div class="user-profile-widget" id="userProfileWidget">
+            <div class="user-avatar" id="headerUserAvatar">KK</div>
+            <div class="user-info">
+              <div class="user-name" id="headerUserName">Kavindu Kaveesha</div>
+              <div class="user-role-badge" id="headerUserRole">CEO / Admin</div>
+            </div>
+            <button type="button" class="btn-logout" id="btnLogout" onclick="logoutUser()" title="Sign out of NexusCore">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </header>
@@ -982,6 +1124,203 @@
       </div>
       <div class="modal-footer">
         <button class="btn-primary-sm" onclick="closeModal('modalEntityDetail')">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MULTI-PAGE INTERACTIVE GUIDED TOUR MODAL
+       3 Guided Walkthrough Pages with Custom System Graphics
+       ======================================================== -->
+  <div class="modal-backdrop" id="modalGuidedTour">
+    <div class="modal-box tour-modal-box">
+      <div class="modal-header tour-header">
+        <div class="tour-header-left">
+          <span class="tour-icon-badge">🚀</span>
+          <div>
+            <div class="modal-title" id="tourModalHeading">System Architecture Tour</div>
+            <div class="tour-step-pill" id="tourStepIndicator">Page 1 of 3 • Enterprise Database Core</div>
+          </div>
+        </div>
+        <button type="button" class="ai-close-btn" onclick="closeTourModal()" title="Close Tour">✕</button>
+      </div>
+
+      <div class="modal-body tour-body">
+        <!-- SLIDE 1: PostgreSQL 16 Architecture & ACID Security -->
+        <div class="tour-slide active" id="tourSlide1">
+          <div class="tour-graphic-container">
+            <svg viewBox="0 0 580 180" width="100%" height="100%" fill="none" class="tour-svg-graphic">
+              <!-- DB Core Box -->
+              <rect x="210" y="25" width="160" height="115" rx="14" fill="rgba(6, 182, 212, 0.12)" stroke="#06b6d4" stroke-width="2"/>
+              <ellipse cx="290" cy="50" rx="55" ry="16" fill="rgba(6, 182, 212, 0.3)" stroke="#38bdf8" stroke-width="1.8"/>
+              <path d="M235 50v55c0 8.8 24.6 16 55 16s55-7.2 55-16V50" stroke="#38bdf8" stroke-width="1.8"/>
+              <path d="M235 78c0 8.8 24.6 16 55 16s55-7.2 55-16" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <text x="290" y="112" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace">PostgreSQL 16.2 Core</text>
+              <text x="290" y="127" text-anchor="middle" fill="#38bdf8" font-size="9" font-family="'JetBrains Mono', monospace">27 Normalized Tables (3NF)</text>
+
+              <!-- Left Node: ACID Lock -->
+              <rect x="25" y="45" width="145" height="75" rx="10" fill="rgba(16, 185, 129, 0.1)" stroke="#10b981" stroke-width="1.6"/>
+              <text x="97" y="73" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">🔒 ACID Concurrency</text>
+              <text x="97" y="90" text-anchor="middle" fill="#94a3b8" font-size="9.5">SELECT FOR UPDATE</text>
+              <text x="97" y="105" text-anchor="middle" fill="#64748b" font-size="8.5">Zero Row Write Conflicts</text>
+              <!-- Arrow to DB -->
+              <line x1="170" y1="82" x2="208" y2="82" stroke="#10b981" stroke-width="2" stroke-dasharray="4 2"/>
+              <polygon points="208,78 215,82 208,86" fill="#10b981"/>
+
+              <!-- Right Node: SHA-256 Ledger -->
+              <rect x="410" y="45" width="145" height="75" rx="10" fill="rgba(168, 85, 247, 0.1)" stroke="#a855f7" stroke-width="1.6"/>
+              <text x="482" y="73" text-anchor="middle" fill="#c084fc" font-size="11" font-weight="700">🔐 SHA-256 Ledger</text>
+              <text x="482" y="90" text-anchor="middle" fill="#94a3b8" font-size="9.5">Tamper-Proof Triggers</text>
+              <text x="482" y="105" text-anchor="middle" fill="#64748b" font-size="8.5">Cryptographic Audit Chain</text>
+              <!-- Arrow from DB -->
+              <line x1="370" y1="82" x2="408" y2="82" stroke="#a855f7" stroke-width="2" stroke-dasharray="4 2"/>
+              <polygon points="408,78 415,82 408,86" fill="#a855f7"/>
+
+              <!-- Pulse dots -->
+              <circle cx="190" cy="82" r="3.5" fill="#34d399"/>
+              <circle cx="390" cy="82" r="3.5" fill="#c084fc"/>
+            </svg>
+          </div>
+          <div class="tour-text-content">
+            <h3>Unified Database-Centric Core (27 Entities)</h3>
+            <p>NexusCore unifies project, client, employee, and bug tracking into a single resilient <strong>PostgreSQL 16</strong> engine. Rather than relying on fragile 3rd-party SaaS integrations, all logic is governed by <strong>ACID-compliant stored procedures and audit triggers</strong>.</p>
+            <div class="tour-feature-list">
+              <div class="tour-feature-item">
+                <span class="feat-bullet cyan">✓</span>
+                <span><strong>Row-Level Locks (SELECT FOR UPDATE):</strong> Prevents simultaneous edit collisions when two engineers modify a task or sprint status.</span>
+              </div>
+              <div class="tour-feature-item">
+                <span class="feat-bullet emerald">✓</span>
+                <span><strong>SHA-256 Tamper-Evident Ledger:</strong> Every insert/update automatically calculates a cryptographic hash chain for compliance.</span>
+              </div>
+              <div class="tour-feature-item">
+                <span class="feat-bullet purple">✓</span>
+                <span><strong>3NF & BCNF Normalized:</strong> 27 distinct relational entities ensure zero data redundancy and instant query performance.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: Role-Based Workspaces & Smart Assignee Engine -->
+        <div class="tour-slide" id="tourSlide2" style="display: none;">
+          <div class="tour-graphic-container">
+            <svg viewBox="0 0 580 180" width="100%" height="100%" fill="none" class="tour-svg-graphic">
+              <!-- Smart Engine Center -->
+              <circle cx="290" cy="90" r="50" fill="rgba(245, 158, 11, 0.12)" stroke="#f59e0b" stroke-width="2"/>
+              <text x="290" y="83" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="700">SMART ENGINE</text>
+              <text x="290" y="99" text-anchor="middle" fill="#94a3b8" font-size="8.5">ML Scoring Algorithm</text>
+              <text x="290" y="112" text-anchor="middle" fill="#f59e0b" font-size="8">40% Cap | 40% Skill | 20% Vel</text>
+
+              <!-- 4 Roles orbiting -->
+              <!-- CEO -->
+              <rect x="25" y="22" width="140" height="52" rx="8" fill="rgba(6, 182, 212, 0.1)" stroke="#06b6d4" stroke-width="1.4"/>
+              <text x="95" y="44" text-anchor="middle" fill="#38bdf8" font-size="10.5" font-weight="700">👔 CEO / Admin</text>
+              <text x="95" y="60" text-anchor="middle" fill="#94a3b8" font-size="8.5">Executive P&L, Audit & All Tabs</text>
+              <line x1="165" y1="48" x2="245" y2="75" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+              <!-- PM -->
+              <rect x="25" y="105" width="140" height="52" rx="8" fill="rgba(16, 185, 129, 0.1)" stroke="#10b981" stroke-width="1.4"/>
+              <text x="95" y="127" text-anchor="middle" fill="#34d399" font-size="10.5" font-weight="700">📊 Project Manager</text>
+              <text x="95" y="143" text-anchor="middle" fill="#94a3b8" font-size="8.5">Sprints, Gantt & Velocity</text>
+              <line x1="165" y1="131" x2="245" y2="105" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+              <!-- Dev/QA -->
+              <rect x="415" y="22" width="140" height="52" rx="8" fill="rgba(168, 85, 247, 0.1)" stroke="#a855f7" stroke-width="1.4"/>
+              <text x="485" y="44" text-anchor="middle" fill="#c084fc" font-size="10.5" font-weight="700">💻 Developer / QA</text>
+              <text x="485" y="60" text-anchor="middle" fill="#94a3b8" font-size="8.5">Staging Bugs & Code Tasks</text>
+              <line x1="415" y1="48" x2="335" y2="75" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+              <!-- Client -->
+              <rect x="415" y="105" width="140" height="52" rx="8" fill="rgba(236, 72, 153, 0.1)" stroke="#ec4899" stroke-width="1.4"/>
+              <text x="485" y="127" text-anchor="middle" fill="#f472b6" font-size="10.5" font-weight="700">🤝 Client Partner</text>
+              <text x="485" y="143" text-anchor="middle" fill="#94a3b8" font-size="8.5">SLA Milestones & Sign-offs</text>
+              <line x1="415" y1="131" x2="335" y2="105" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <div class="tour-text-content">
+            <h3>Dynamic Role Redirection & Smart Task Dispatch</h3>
+            <p>NexusCore enforces granular <strong>Row-Level Security (RLS)</strong> and redirects users to their designated operational hub upon authentication.</p>
+            <div class="tour-feature-list">
+              <div class="tour-feature-item">
+                <span class="feat-bullet amber">★</span>
+                <span><strong>Smart Assignee Algorithm:</strong> Automatically ranks and assigns the best-qualified engineer using Availability (40%), Skill Match (40%), and Delivery Velocity (20%).</span>
+              </div>
+              <div class="tour-feature-item">
+                <span class="feat-bullet cyan">★</span>
+                <span><strong>Role Privacy:</strong> External clients cannot access employee hourly rates or internal telemetry; Developers focus on task pipelines without financial distraction.</span>
+              </div>
+              <div class="tour-feature-item">
+                <span class="feat-bullet emerald">★</span>
+                <span><strong>PDPA 2022 Compliance:</strong> Ethical work telemetry tracks active work intervals with full privacy consent.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Koala Mascot AI & Particle Backgrounds -->
+        <div class="tour-slide" id="tourSlide3" style="display: none;">
+          <div class="tour-graphic-container">
+            <svg viewBox="0 0 580 180" width="100%" height="100%" fill="none" class="tour-svg-graphic">
+              <!-- Koala Mascot Box -->
+              <rect x="50" y="25" width="200" height="120" rx="14" fill="rgba(6, 182, 212, 0.12)" stroke="#06b6d4" stroke-width="1.8"/>
+              <text x="150" y="66" text-anchor="middle" font-size="34">🐨</text>
+              <text x="150" y="98" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">NexusCore AI Mascot</text>
+              <text x="150" y="116" text-anchor="middle" fill="#38bdf8" font-size="9" font-family="'JetBrains Mono', monospace">gemini-3.8-flash • SQL Context</text>
+
+              <!-- Connection arrow -->
+              <path d="M250 85h60" stroke="#06b6d4" stroke-width="2" stroke-dasharray="4 2"/>
+              <polygon points="310,81 318,85 310,89" fill="#06b6d4"/>
+
+              <!-- 3 Particle Themes Box -->
+              <rect x="320" y="25" width="210" height="120" rx="14" fill="rgba(255, 255, 255, 0.04)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <text x="425" y="48" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">3 Interactive Particle Sceneries</text>
+              <!-- 3 Pills -->
+              <rect x="335" y="58" width="180" height="22" rx="6" fill="rgba(6, 182, 212, 0.2)"/>
+              <text x="425" y="73" text-anchor="middle" fill="#38bdf8" font-size="9.5" font-weight="600">⚡ Tech Circuit / Network Mesh</text>
+
+              <rect x="335" y="85" width="180" height="22" rx="6" fill="rgba(168, 85, 247, 0.2)"/>
+              <text x="425" y="100" text-anchor="middle" fill="#c084fc" font-size="9.5" font-weight="600">🌌 NASA Nebula Deep Space</text>
+
+              <rect x="335" y="112" width="180" height="22" rx="6" fill="rgba(16, 185, 129, 0.2)"/>
+              <text x="425" y="127" text-anchor="middle" fill="#34d399" font-size="9.5" font-weight="600">🎄 Christmas Snow Wonderland</text>
+            </svg>
+          </div>
+          <div class="tour-text-content">
+            <h3>Koala Mascot AI Bot & Dynamic Sceneries</h3>
+            <p>NexusCore features a smart <strong>Gemini 3.8 Flash</strong> assistant represented by the cute <strong>Koala Mascot</strong> in the bottom right, and 3 switchable interactive particle themes.</p>
+            <div class="tour-feature-list">
+              <div class="tour-feature-item">
+                <span class="feat-bullet cyan">🐨</span>
+                <span><strong>Click the Koala Mascot:</strong> Open the intelligent prompt dialog anytime to ask natural-language questions about projects, dev allocations, and deadlines.</span>
+              </div>
+              <div class="tour-feature-item">
+                <span class="feat-bullet purple">✨</span>
+                <span><strong>Pre-loaded Database Knowledge:</strong> The mascot automatically knows your 27 tables, stored procedures, and initial records from <code>updated_database.sql</code>.</span>
+              </div>
+              <div class="tour-feature-item">
+                <span class="feat-bullet emerald">🎨</span>
+                <span><strong>Cursor Interaction:</strong> Switch between Tech Mesh, NASA Space, and Christmas Snow anytime in the header or login screen with cursor hover & click reactions.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tour Footer Controls -->
+      <div class="modal-footer tour-footer">
+        <!-- Dot indicators -->
+        <div class="tour-dots" id="tourDotsContainer">
+          <button type="button" class="tour-dot active" onclick="goToTourSlide(0)" title="Page 1"></button>
+          <button type="button" class="tour-dot" onclick="goToTourSlide(1)" title="Page 2"></button>
+          <button type="button" class="tour-dot" onclick="goToTourSlide(2)" title="Page 3"></button>
+        </div>
+
+        <div class="tour-nav-buttons">
+          <button type="button" class="btn-sm" id="btnTourBack" onclick="prevTourSlide()" style="display: none;">← Back</button>
+          <button type="button" class="btn-sm" id="btnTourSkip" onclick="closeTourModal()">Skip</button>
+          <button type="button" class="btn-primary-sm" id="btnTourNext" onclick="nextTourSlide()">Next →</button>
+          <button type="button" class="btn-primary-sm" id="btnTourFinish" onclick="closeTourModal()" style="display: none;">✓ OK, Got It!</button>
+        </div>
       </div>
     </div>
   </div>

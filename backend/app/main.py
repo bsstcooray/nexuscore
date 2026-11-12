@@ -60,13 +60,16 @@ def bootstrap_database():
             e1 = Employee(full_name="Kavindu Kaveesha", work_email="kavindu@helanexus.com", designation="Founder & CEO", department="leadership", hourly_rate=120.0)
             e2 = Employee(full_name="Dilshan Gamage", work_email="dilshan@helanexus.com", designation="Lead Backend Architect", department="engineering", hourly_rate=85.0)
             e3 = Employee(full_name="Bimsari Perera", work_email="bimsari@helanexus.com", designation="Database Administrator", department="engineering", hourly_rate=80.0)
-            db.add_all([e1, e2, e3])
+            e4 = Employee(full_name="Nimna Jayawardhana", work_email="nimna@helanexus.com", designation="Senior Full-Stack Engineer", department="engineering", hourly_rate=75.0)
+            db.add_all([e1, e2, e3, e4])
             db.commit()
 
-            u1 = AppUser(employee_id=e1.employee_id, username="kavindu", password_hash="Password123!", role="ceo_admin", mfa_enabled=True)
+            u1 = AppUser(employee_id=e1.employee_id, username="kavindu", password_hash="Password123!", role="ceo_admin", mfa_enabled=False)
             u2 = AppUser(employee_id=e2.employee_id, username="dilshan", password_hash="Password123!", role="project_manager", mfa_enabled=False)
             u3 = AppUser(employee_id=e3.employee_id, username="bimsari", password_hash="Password123!", role="developer_qa", mfa_enabled=False)
-            db.add_all([u1, u2, u3])
+            u4 = AppUser(employee_id=e4.employee_id, username="nimna", password_hash="Password123!", role="developer_qa", mfa_enabled=False)
+            u5 = AppUser(employee_id=None, username="client", password_hash="Password123!", role="client", mfa_enabled=False)
+            db.add_all([u1, u2, u3, u4, u5])
             db.commit()
 
             # 3. Projects

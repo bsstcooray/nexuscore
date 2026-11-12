@@ -229,6 +229,9 @@ async function initParticles(mode = 'mesh') {
 
   // 4. Retrieve configuration object
   const cfg = await fetchOrFallbackConfig(mode);
+  if (cfg && cfg.interactivity) {
+    cfg.interactivity.detect_on = 'window'; // Ensures cursor interaction across entire viewport, including login blank area
+  }
 
   // 5. Initialize particlesJS with the selected configuration
   try {
@@ -383,34 +386,211 @@ function initNavigation() {
   });
 }
 
-// --- ROLE SWITCHER SIMULATOR ---
-function initRoleSwitcher() {
-  const roleSelect = document.getElementById('roleSelect');
-  if (!roleSelect) return;
+// --- AUTHENTICATION & ROLE-BASED DASHBOARD REDIRECTION ---
+let currentUserSession = null;
 
-  roleSelect.addEventListener('change', (e) => {
-    const role = e.target.value;
-    audio.playSwitch();
+function getRoleDisplayName(role) {
+  const map = {
+    'ceo_admin': 'CEO / Admin',
+    'project_manager': 'Project Manager',
+    'developer_qa': 'Developer / QA',
+    'client': 'Client Partner'
+  };
+  return map[role] || (role ? role.replace('_', ' ').toUpperCase() : 'User');
+}
 
-    // Adjust UI based on Role
-    const financeElements = document.querySelectorAll('.role-finance');
-    const devElements = document.querySelectorAll('.role-dev-only');
-    const adminPills = document.querySelectorAll('.role-admin-badge');
+async function authenticateUser(username, password) {
+  const errBox = document.getElementById('loginErrorMessage');
+  const btnSubmit = document.getElementById('btnLoginSubmit');
+  const btnText = document.getElementById('loginBtnText');
 
-    if (role === 'client') {
-      financeElements.forEach(el => el.style.display = 'none');
-      showToast('Client Mode (Restricted): Read-only milestones, burndown & summaries active.', 'security');
-    } else if (role === 'developer') {
-      financeElements.forEach(el => el.style.display = 'none');
-      showToast('Developer Mode: Assigned tasks, bug tracking, and telemetry active.', 'info');
-    } else if (role === 'manager') {
-      financeElements.forEach(el => el.style.display = 'inline-block');
-      showToast('Project Manager Mode: Sprint planning, smart assignment & team alerts active.', 'info');
-    } else {
-      financeElements.forEach(el => el.style.display = 'inline-block');
-      showToast('CEO / Administrator Mode: Full database & financial access granted.', 'security');
+  if (errBox) errBox.style.display = 'none';
+  if (btnSubmit) btnSubmit.disabled = true;
+  if (btnText) btnText.innerText = 'Authenticating...';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username.trim(), password: password })
+    });
+
+    if (!res.ok) {
+      let errDetail = 'Invalid username or password.';
+      try {
+        const errJson = await res.json();
+        if (errJson && errJson.detail) errDetail = errJson.detail;
+      } catch (e) {}
+      throw new Error(errDetail);
     }
+
+    const data = await res.json();
+    currentUserSession = data;
+    try {
+      localStorage.setItem('nexuscore_user', JSON.stringify(data));
+    } catch (e) {}
+
+    // Apply role redirection and reveal dashboard
+    applyUserRole(data.role, data);
+
+    const loginView = document.getElementById('login-view');
+    const appContainer = document.getElementById('appMainContainer') || document.querySelector('.app-container');
+    if (loginView) loginView.classList.add('hidden');
+    if (appContainer) appContainer.style.display = 'flex';
+
+    audio.playSuccess();
+    showToast(`Welcome, ${data.full_name || data.username}! Redirected to ${getRoleDisplayName(data.role)} dashboard.`, 'success');
+  } catch (err) {
+    console.error('Login error:', err);
+    if (errBox) {
+      errBox.innerText = `⚠️ ${err.message || 'Login failed. Please verify credentials.'}`;
+      errBox.style.display = 'block';
+    }
+    audio.playAlert();
+    showToast(err.message || 'Authentication failed', 'alert');
+  } finally {
+    if (btnSubmit) btnSubmit.disabled = false;
+    if (btnText) btnText.innerText = 'Sign In to Dashboard';
+  }
+}
+
+function handleLoginSubmit(e) {
+  if (e) e.preventDefault();
+  const unameInput = document.getElementById('loginUsername');
+  const pwdInput = document.getElementById('loginPassword');
+  if (!unameInput || !pwdInput) return;
+  authenticateUser(unameInput.value, pwdInput.value);
+}
+
+function quickFillAndLogin(username, password) {
+  const unameInput = document.getElementById('loginUsername');
+  const pwdInput = document.getElementById('loginPassword');
+  if (unameInput) unameInput.value = username;
+  if (pwdInput) pwdInput.value = password;
+  authenticateUser(username, password);
+}
+
+function togglePasswordVisibility() {
+  const pwdInput = document.getElementById('loginPassword');
+  const eyeBtn = document.getElementById('btnTogglePassword');
+  if (!pwdInput) return;
+  if (pwdInput.type === 'password') {
+    pwdInput.type = 'text';
+    if (eyeBtn) eyeBtn.innerText = '🔒';
+  } else {
+    pwdInput.type = 'password';
+    if (eyeBtn) eyeBtn.innerText = '👁️';
+  }
+}
+
+function logoutUser() {
+  currentUserSession = null;
+  try {
+    localStorage.removeItem('nexuscore_user');
+  } catch (e) {}
+
+  const loginView = document.getElementById('login-view');
+  const appContainer = document.getElementById('appMainContainer') || document.querySelector('.app-container');
+  if (loginView) loginView.classList.remove('hidden');
+  if (appContainer) appContainer.style.display = 'none';
+
+  const pwdInput = document.getElementById('loginPassword');
+  if (pwdInput) pwdInput.value = '';
+
+  audio.playClick();
+  showToast('Logged out of NexusCore. Return anytime.', 'info');
+}
+
+function applyUserRole(role, user) {
+  // Update Header Profile Info
+  const headerAvatar = document.getElementById('headerUserAvatar');
+  const headerName = document.getElementById('headerUserName');
+  const headerRole = document.getElementById('headerUserRole');
+
+  const fullName = (user && user.full_name) || (user && user.username) || 'User';
+  const roleName = getRoleDisplayName(role);
+
+  if (headerName) headerName.innerText = fullName;
+  if (headerRole) headerRole.innerText = roleName;
+  if (headerAvatar) {
+    const parts = fullName.trim().split(/\s+/);
+    const initials = parts.length > 1 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
+    headerAvatar.innerText = initials || 'NC';
+  }
+
+  // Adjust Sidebar and Visibility per Role
+  const financeElements = document.querySelectorAll('.role-finance');
+  const navItems = document.querySelectorAll('.nav-item');
+  const viewPanels = document.querySelectorAll('.view-panel');
+
+  const tabOverview = document.querySelector('.nav-item[data-target="view-overview"]');
+  const tabProjects = document.querySelector('.nav-item[data-target="view-projects"]');
+  const tabSmartAssign = document.querySelector('.nav-item[data-target="view-smart-assign"]');
+  const tabGithub = document.querySelector('.nav-item[data-target="view-github-sync"]');
+  const tabTelemetry = document.querySelector('.nav-item[data-target="view-telemetry"]');
+  const tabSecurity = document.querySelector('.nav-item[data-target="view-security-audit"]');
+  const tabDatabase = document.querySelector('.nav-item[data-target="view-database"]');
+
+  // Reset all tabs to visible first
+  [tabOverview, tabProjects, tabSmartAssign, tabGithub, tabTelemetry, tabSecurity, tabDatabase].forEach(tab => {
+    if (tab) tab.style.display = '';
   });
+
+  let targetViewId = 'view-overview';
+
+  if (role === 'client') {
+    // Client: Restrict finance hourly rates, dev telemetry, raw SQL schema, security audit
+    financeElements.forEach(el => el.style.display = 'none');
+    if (tabTelemetry) tabTelemetry.style.display = 'none';
+    if (tabSecurity) tabSecurity.style.display = 'none';
+    if (tabDatabase) tabDatabase.style.display = 'none';
+    targetViewId = 'view-projects'; // Redirect client to Projects & Milestones
+  } else if (role === 'developer_qa') {
+    // Developer: Hide sensitive financial rates, redirect to GitHub Staging / Tasks
+    financeElements.forEach(el => el.style.display = 'none');
+    targetViewId = 'view-github-sync'; // Redirect developer to GitHub Sync & Bugs
+  } else if (role === 'project_manager') {
+    // Project Manager: Full project control, redirect to Projects & Sprints
+    financeElements.forEach(el => el.style.display = '');
+    targetViewId = 'view-projects'; // Redirect PM to Projects & Kanban Sprints
+  } else {
+    // CEO / Admin: Full access, redirect to Executive Overview
+    financeElements.forEach(el => el.style.display = '');
+    targetViewId = 'view-overview'; // Redirect CEO to Executive Overview
+  }
+
+  // Trigger click on the target view navigation item
+  const targetNavItem = document.querySelector(`.nav-item[data-target="${targetViewId}"]`);
+  if (targetNavItem) {
+    targetNavItem.click();
+  } else {
+    navItems.forEach(n => n.classList.remove('active'));
+    viewPanels.forEach(p => p.classList.remove('active'));
+    const p = document.getElementById(targetViewId);
+    if (p) p.classList.add('active');
+  }
+}
+
+function initAuth() {
+  // Check if session stored in localStorage
+  let savedUser = null;
+  try {
+    const raw = localStorage.getItem('nexuscore_user');
+    if (raw) savedUser = JSON.parse(raw);
+  } catch (e) {}
+
+  const loginView = document.getElementById('login-view');
+  const appContainer = document.getElementById('appMainContainer') || document.querySelector('.app-container');
+
+  if (savedUser && savedUser.username && savedUser.role) {
+    currentUserSession = savedUser;
+    if (loginView) loginView.classList.add('hidden');
+    if (appContainer) appContainer.style.display = 'flex';
+    applyUserRole(savedUser.role, savedUser);
+  } else {
+    if (loginView) loginView.classList.remove('hidden');
+    if (appContainer) appContainer.style.display = 'none';
+  }
 }
 
 // --- WORK SESSION TIMER & TELEMETRY SIMULATOR ---
@@ -652,37 +832,110 @@ function initAuditLedger() {
   }
 }
 
-// --- GUIDED ONBOARDING TOUR ---
+// --- MULTI-PAGE GUIDED TOUR (3 PAGES WITH SYSTEM GRAPHICS) ---
+let currentTourSlideIndex = 0;
+const totalTourSlides = 3;
+
+function openTourModal() {
+  currentTourSlideIndex = 0;
+  updateTourSlideView();
+  const modal = document.getElementById('modalGuidedTour');
+  if (modal) {
+    modal.style.display = 'flex';
+    modal.classList.add('open');
+  }
+  audio.playSwitch();
+}
+
+function closeTourModal() {
+  const modal = document.getElementById('modalGuidedTour');
+  if (modal) {
+    modal.classList.remove('open');
+    modal.style.display = 'none';
+  }
+  audio.playClick();
+  showToast('🎉 Tour complete! You can reopen it anytime by clicking 🚀 Tour in the header.', 'info');
+}
+
+function updateTourSlideView() {
+  const slides = [
+    document.getElementById('tourSlide1'),
+    document.getElementById('tourSlide2'),
+    document.getElementById('tourSlide3')
+  ];
+
+  slides.forEach((slide, idx) => {
+    if (!slide) return;
+    if (idx === currentTourSlideIndex) {
+      slide.style.display = 'flex';
+      slide.classList.add('active');
+    } else {
+      slide.style.display = 'none';
+      slide.classList.remove('active');
+    }
+  });
+
+  // Update dots
+  const dots = document.querySelectorAll('.tour-dot');
+  dots.forEach((dot, idx) => {
+    dot.classList.toggle('active', idx === currentTourSlideIndex);
+  });
+
+  // Update header step text
+  const stepIndicator = document.getElementById('tourStepIndicator');
+  const titles = [
+    'Page 1 of 3 • Enterprise Database Core & ACID',
+    'Page 2 of 3 • Role-Based Workspaces & Smart Assignee',
+    'Page 3 of 3 • Koala Mascot AI & Dynamic Particles'
+  ];
+  if (stepIndicator) {
+    stepIndicator.innerText = titles[currentTourSlideIndex] || `Page ${currentTourSlideIndex + 1} of 3`;
+  }
+
+  // Update navigation buttons
+  const btnBack = document.getElementById('btnTourBack');
+  const btnNext = document.getElementById('btnTourNext');
+  const btnFinish = document.getElementById('btnTourFinish');
+  const btnSkip = document.getElementById('btnTourSkip');
+
+  if (btnBack) btnBack.style.display = currentTourSlideIndex === 0 ? 'none' : 'inline-flex';
+  if (btnNext) btnNext.style.display = currentTourSlideIndex === totalTourSlides - 1 ? 'none' : 'inline-flex';
+  if (btnFinish) btnFinish.style.display = currentTourSlideIndex === totalTourSlides - 1 ? 'inline-flex' : 'none';
+  if (btnSkip) btnSkip.style.display = currentTourSlideIndex === totalTourSlides - 1 ? 'none' : 'inline-flex';
+}
+
+function nextTourSlide() {
+  if (currentTourSlideIndex < totalTourSlides - 1) {
+    currentTourSlideIndex++;
+    updateTourSlideView();
+    audio.playClick();
+  }
+}
+
+function prevTourSlide() {
+  if (currentTourSlideIndex > 0) {
+    currentTourSlideIndex--;
+    updateTourSlideView();
+    audio.playClick();
+  }
+}
+
+function goToTourSlide(index) {
+  if (index >= 0 && index < totalTourSlides) {
+    currentTourSlideIndex = index;
+    updateTourSlideView();
+    audio.playClick();
+  }
+}
+
 function initGuidedTour() {
   const btnStartTour = document.getElementById('btnStartTour');
-  if (!btnStartTour) return;
-
-  btnStartTour.addEventListener('click', () => {
-    audio.playSwitch();
-    showToast('🚀 Welcome to NexusCore! Take a tour of the unified database platform.', 'info');
-
-    const steps = [
-      { element: '.particle-switcher-container', title: 'Particle Engine Switcher', text: 'Toggle between Network Mesh, NASA Stars, and Data Snow backgrounds.' },
-      { element: '.role-switcher-box', title: 'Role Simulator', text: 'Switch between CEO, PM, Developer, and Client to inspect RLS permissions.' },
-      { element: '.stat-card', title: 'Materialized Metrics', text: 'Live KPI cards powered by pre-computed materialized views.' },
-      { element: '#mascot-root', title: 'NexusCore Mascot AI Bot', text: 'Natural language Text-to-SQL, sprint reports, and bug triage powered by Gemini 3.8 Flash!' }
-    ];
-
-    let currentStep = 0;
-    function highlightNext() {
-      if (currentStep >= steps.length) {
-        showToast('🎉 Tour Complete! You are ready to explore NexusCore.', 'success');
-        audio.playSuccess();
-        return;
-      }
-      const s = steps[currentStep];
-      showToast(`Step ${currentStep + 1}/${steps.length}: ${s.title} - ${s.text}`, 'info');
-      currentStep++;
-      setTimeout(highlightNext, 3500);
-    }
-
-    highlightNext();
-  });
+  if (btnStartTour) {
+    btnStartTour.addEventListener('click', (e) => {
+      e.preventDefault();
+      openTourModal();
+    });
+  }
 }
 
 // --- MODAL UTILITIES ---
@@ -1035,6 +1288,16 @@ function repairHashChain() {
   showToast('🛡️ Hash Chain Repaired: Cryptographic ledger recomputed and verified across all 27 tables.', 'security');
 }
 window.repairHashChain = repairHashChain;
+window.handleLoginSubmit = handleLoginSubmit;
+window.quickFillAndLogin = quickFillAndLogin;
+window.togglePasswordVisibility = togglePasswordVisibility;
+window.logoutUser = logoutUser;
+window.applyUserRole = applyUserRole;
+window.openTourModal = openTourModal;
+window.closeTourModal = closeTourModal;
+window.nextTourSlide = nextTourSlide;
+window.prevTourSlide = prevTourSlide;
+window.goToTourSlide = goToTourSlide;
 
 // --- INITIALIZATION ENTRY POINT ---
 function bootNexusCore() {
@@ -1062,8 +1325,8 @@ function bootNexusCore() {
   // 3. Navigation
   initNavigation();
 
-  // 4. Role Switcher
-  initRoleSwitcher();
+  // 4. Authentication & Role Redirection
+  initAuth();
 
   // 5. Work Session
   initWorkSession();

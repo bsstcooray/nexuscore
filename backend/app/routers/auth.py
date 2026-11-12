@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 import pyotp
 from backend.app.database import get_db
-from backend.app.models import AppUser, UserSession, LoginAttempt
+from backend.app.models import AppUser, UserSession, LoginAttempt, Employee
 from backend.app.schemas import LoginRequest, TokenResponse, MFASetupResponse, MFAVerifyRequest
 from backend.app.security import (
     verify_password, create_access_token, verify_totp, get_current_user
@@ -21,8 +21,15 @@ router = APIRouter(prefix="/api/auth", tags=["Authentication & Security"])
 def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)):
     ip_addr = request.client.host if request.client else "127.0.0.1"
     
+    # Support convenient role aliases for testing/demo (admin, pm, dev)
+    uname = payload.username.strip()
+    alias_map = {"admin": "kavindu", "pm": "dilshan", "dev": "bimsari", "developer": "bimsari", "ceo": "kavindu"}
+    effective_username = alias_map.get(uname.lower(), uname)
+
     # 1. Look up user
-    user = db.query(AppUser).filter(AppUser.username == payload.username).first()
+    user = db.query(AppUser).filter(AppUser.username == effective_username).first()
+    if not user and uname != effective_username:
+        user = db.query(AppUser).filter(AppUser.username == uname).first()
     
     if not user:
         # Record failed attempt
@@ -80,12 +87,25 @@ def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)
     db.add(LoginAttempt(username=payload.username, ip_address=ip_addr, is_success=True))
     db.commit()
 
+    full_name = user.username.title()
+    designation = user.role.replace("_", " ").title()
+    if user.employee_id:
+        emp = db.query(Employee).filter(Employee.employee_id == user.employee_id).first()
+        if emp:
+            full_name = emp.full_name
+            designation = emp.designation
+    elif user.role == "client":
+        full_name = "CarePlus Client Representative"
+        designation = "External Stakeholder"
+
     return TokenResponse(
         access_token=token,
         user_id=user.user_id,
         username=user.username,
         role=user.role,
-        mfa_required=False
+        mfa_required=False,
+        full_name=full_name,
+        designation=designation
     )
 
 @router.post("/mfa/setup", response_model=MFASetupResponse)

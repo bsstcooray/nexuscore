@@ -1384,6 +1384,7 @@ INSERT INTO EMPLOYEE (employee_id, full_name, work_email, designation, departmen
 INSERT INTO APP_USER (user_id, employee_id, username, password_hash, role, mfa_secret, mfa_enabled) VALUES (19, 19, 'staff19', '$2b$12$K8yG0n9E7wK1Q1T5O2M8bOaV4X9F7L5D2C0E8G6I4K2M0O8Q6S4U2', 'developer_qa', 'JBSWY3DPEHPK3PXP', TRUE) ON CONFLICT (username) DO NOTHING;
 INSERT INTO EMPLOYEE (employee_id, full_name, work_email, designation, department, hourly_rate, weekly_capacity_hours) VALUES (20, 'Staff Engineer 20', 'staff.engineer.20@helanexus.com', 'Software Engineer', 'engineering', 60.0, 40.0) ON CONFLICT (work_email) DO NOTHING;
 INSERT INTO APP_USER (user_id, employee_id, username, password_hash, role, mfa_secret, mfa_enabled) VALUES (20, 20, 'staff20', '$2b$12$K8yG0n9E7wK1Q1T5O2M8bOaV4X9F7L5D2C0E8G6I4K2M0O8Q6S4U2', 'developer_qa', 'JBSWY3DPEHPK3PXP', TRUE) ON CONFLICT (username) DO NOTHING;
+INSERT INTO APP_USER (user_id, employee_id, username, password_hash, role, mfa_secret, mfa_enabled) VALUES (21, NULL, 'client', '$2b$12$K8yG0n9E7wK1Q1T5O2M8bOaV4X9F7L5D2C0E8G6I4K2M0O8Q6S4U2', 'client', NULL, FALSE) ON CONFLICT (username) DO NOTHING;
 
 -- 3. INSERT INTO SKILL (10 records)
 INSERT INTO SKILL (skill_id, name, category, description) VALUES (1, 'PostgreSQL Database Optimization', 'database', 'Deep knowledge of execution plans, GIN/BRIN indexes and PL/pgSQL.') ON CONFLICT (name) DO NOTHING;
